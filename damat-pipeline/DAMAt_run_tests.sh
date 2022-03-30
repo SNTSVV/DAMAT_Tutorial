@@ -58,7 +58,7 @@ while IFS="," read -r p || [ -n "$p" ];do
 
   # timeout 30 ./build/examples/csp_server_client -t
   make clean
-  make test_01
+  make $tst
 
   EXEC_RET_CODE=$?
 
