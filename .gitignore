@@ -53,3 +53,7 @@ dkms.conf
 damat-pipeline/.DS_Store
 .DS_Store
 damat-pipeline/coverage_log
+damat-pipeline/testlists/*
+damat-pipeline/testlists
+damat-pipeline/results/*
+damat-pipeline/results
