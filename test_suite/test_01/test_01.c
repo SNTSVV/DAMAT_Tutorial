@@ -53,7 +53,55 @@ void server(void) {
 
     /* Read packets on connection, timout is 100 mS */
     csp_packet_t *packet;
+
+    /* start of prints for faqas */
+
+    int conn_pri = csp_conn_pri_faqas(conn);
+    csp_print("pri read_pre %d \n", conn_pri);
+
+    int conn_dport = csp_conn_dport(conn);
+    csp_print("dport read_pre %d \n", conn_dport);
+
+    int conn_sport = csp_conn_sport(conn);
+    csp_print("sport read_pre %d \n", conn_sport);
+
+    int conn_dst = csp_conn_dst(conn);
+    csp_print("dst read_pre %d \n", conn_dst);
+
+    int conn_src = csp_conn_src(conn);
+    csp_print("src read_pre %d \n", conn_src);
+
+    int conn_flags = csp_conn_flags(conn);
+    csp_print("flags read_pre %d \n", conn_flags);
+
+    /* end of prints for faqas */
+
     while ((packet = csp_read(conn, 50)) != NULL) {
+
+      /* start of prints for faqas */
+
+      int conn_pri = csp_conn_pri_faqas(conn);
+      csp_print("pri read %d \n", conn_pri);
+
+      int conn_dport = csp_conn_dport(conn);
+      csp_print("dport read %d \n", conn_dport);
+
+      int conn_sport = csp_conn_sport(conn);
+      csp_print("sport read %d \n", conn_sport);
+
+      int conn_dst = csp_conn_dst(conn);
+      csp_print("dst read %d \n", conn_dst);
+      csp_print("dst size = %d \n", sizeof_idin_dst(conn));
+
+      int conn_src = csp_conn_src(conn);
+      csp_print("src read %d \n", conn_src);
+      csp_print("pri size = %d \n", sizeof_idin_src(conn));
+
+      int conn_flags = csp_conn_flags(conn);
+      csp_print("flags read %d \n", conn_flags);
+
+      /* end of prints for faqas */
+
       switch (csp_conn_dport(conn)) {
       case MY_SERVER_PORT:
         /* Process packet here */
@@ -82,7 +130,7 @@ void server(void) {
 /* Client task sending requests to server task */
 void client(void) {
 
-  csp_print("Client task started");
+  csp_print("Client task started\n");
 
   unsigned int count = 'A';
 
@@ -129,6 +177,28 @@ void client(void) {
     /* 4. Set packet length */
     packet->length =
         (strlen((char *)packet->data) + 1); /* include the 0 termination */
+
+    /* start of prints for faqas */
+
+    int conn_pri = csp_conn_pri_faqas(conn);
+    csp_print("pri send %d \n", conn_pri);
+
+    int conn_dport = csp_conn_dport(conn);
+    csp_print("dport send %d \n", conn_dport);
+
+    int conn_sport = csp_conn_sport(conn);
+    csp_print("sport send %d \n", conn_sport);
+
+    int conn_dst = csp_conn_dst(conn);
+    csp_print("dst send %d \n", conn_dst);
+
+    int conn_src = csp_conn_src(conn);
+    csp_print("src send %d \n", conn_src);
+
+    int conn_flags = csp_conn_flags(conn);
+    csp_print("flags send %d \n", conn_flags);
+
+    /* end of prints for faqas */
 
     /* 5. Send packet */
     csp_send(conn, packet);

@@ -115,9 +115,9 @@ csp_conn_t * csp_conn_find_existing(csp_id_t * id) {
 			if (conn->idin.dport != id->dport)
 				continue;
 
-		/* Incoming connections are uniquely defined by the source amd
-		 * destination port, as well as the source node. Incoming
-		 * connections can never come from a brodcast address */
+			/* Incoming connections are uniquely defined by the source amd
+			 * destination port, as well as the source node. Incoming
+			 * connections can never come from a brodcast address */
 		} else {
 
 			/* Connection must match dport */
@@ -131,10 +131,7 @@ csp_conn_t * csp_conn_find_existing(csp_id_t * id) {
 			/* Connection must match source */
 			if (conn->idin.src != id->src)
 				continue;
-
 		}
-
-
 
 		/* All conditions found! */
 		return conn;
@@ -355,45 +352,53 @@ int csp_conn_src(csp_conn_t * conn) {
 int csp_conn_flags(csp_conn_t * conn) {
 
 	return conn->idin.flags;
-
 }
 
 // added by FAQAS
 
 int csp_conn_pri_faqas(csp_conn_t * conn) {
 
-    return conn->idin.pri;
-
+	return conn->idin.pri;
 }
 
-void set_conn_idin_src( csp_conn_t *conn, int v){
+void set_conn_idin_src(csp_conn_t * conn, int v) {
 
-conn->idin.src = v;
+	conn->idin.src = v;
 }
 
-void set_conn_idin_dst( csp_conn_t *conn, int v){
+int sizeof_idin_src(csp_conn_t * conn) {
 
-conn->idin.dst = v;
+	return sizeof(conn->idin.src);
 }
 
-void set_conn_idin_dport( csp_conn_t *conn, int v){
+void set_conn_idin_dst(csp_conn_t * conn, int v) {
 
-conn->idin.dport = v;
+	conn->idin.dst = v;
 }
 
-void set_conn_idin_sport( csp_conn_t *conn, int v){
+int sizeof_idin_dst(csp_conn_t * conn) {
 
-conn->idin.sport = v;
+	return sizeof(conn->idin.dst);
 }
 
-void set_conn_idin_flags( csp_conn_t *conn, int v){
+void set_conn_idin_dport(csp_conn_t * conn, int v) {
 
-conn->idin.flags = v;
+	conn->idin.dport = v;
 }
 
-void set_conn_idin_pri( csp_conn_t *conn, int v){
+void set_conn_idin_sport(csp_conn_t * conn, int v) {
 
-conn->idin.pri = v;
+	conn->idin.sport = v;
+}
+
+void set_conn_idin_flags(csp_conn_t * conn, int v) {
+
+	conn->idin.flags = v;
+}
+
+void set_conn_idin_pri(csp_conn_t * conn, int v) {
+
+	conn->idin.pri = v;
 }
 
 // end
@@ -403,14 +408,14 @@ conn->idin.pri = v;
 void csp_conn_print_table(void) {
 
 	for (unsigned int i = 0; i < CSP_CONN_MAX; i++) {
-		__attribute__((__unused__))csp_conn_t * conn = &arr_conn[i];
+		__attribute__((__unused__)) csp_conn_t * conn = &arr_conn[i];
 		csp_print("[%02u %p] S:%u, %u -> %u, %u -> %u (%u) fl %x\r\n",
-		          i, conn, conn->state, conn->idin.src, conn->idin.dst,
-		          conn->idin.dport, conn->idin.sport, conn->sport_outgoing, conn->idin.flags);
+				  i, conn, conn->state, conn->idin.src, conn->idin.dst,
+				  conn->idin.dport, conn->idin.sport, conn->sport_outgoing, conn->idin.flags);
 #if (CSP_USE_RDP)
 		if (conn->idin.flags & CSP_FRDP) {
 			csp_print("\tRDP: S:%d (closed by 0x%x), rcv %u, snd %u, win %" PRIu32 "\n",
-			          conn->rdp.state, conn->rdp.closed_by, conn->rdp.rcv_cur, conn->rdp.snd_una, conn->rdp.window_size);
+					  conn->rdp.state, conn->rdp.closed_by, conn->rdp.rcv_cur, conn->rdp.snd_una, conn->rdp.window_size);
 		}
 #endif
 	}
@@ -419,7 +424,7 @@ void csp_conn_print_table(void) {
 #endif
 
 #if (CSP_HAVE_STDIO)
-#include <stdio.h> // snprintf
+#include <stdio.h>  // snprintf
 
 int csp_conn_print_table_str(char * str_buf, int str_size) {
 
@@ -445,6 +450,6 @@ int csp_conn_print_table_str(char * str_buf, int str_size) {
 #endif
 
 const csp_conn_t * csp_conn_get_array(size_t * size) {
-        *size = CSP_CONN_MAX;
-        return arr_conn;
+	*size = CSP_CONN_MAX;
+	return arr_conn;
 }

@@ -271,6 +271,16 @@ void set_conn_idin_flags(csp_conn_t * conn, int v);
 
 /* added by FAQAS
  */
+int sizeof_idin_src(csp_conn_t * conn);
+
+/* added by FAQAS
+ */
+
+int sizeof_idin_dst(csp_conn_t * conn);
+
+/* added by FAQAS
+ */
+
 int csp_listen(csp_socket_t * socket, size_t backlog);
 
 /**
