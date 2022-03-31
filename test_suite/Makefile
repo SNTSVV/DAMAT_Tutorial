@@ -3,6 +3,7 @@ UTILS=utils/csp_server_client_posix.c
 LIBCSP=../libcsp/build/libcsp.a
 CSP_INCLUDE=../libcsp/include
 CSP_AUTOCONFIG=../libcsp/build/
+# HEADERS=utils/headers
 
 test_01: test_01.o
 	./test_01/test_01.o

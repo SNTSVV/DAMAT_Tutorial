@@ -41,7 +41,7 @@ while IFS="," read -r p || [ -n "$p" ];do
     TIMEOUT=$(echo "$p" | awk -F',' '{$2=($2*4)/1000; printf("%.0f\n", $2);}')
 
     echo "$deco"
-    echo "Running mutant $mutant_id against test case "$tst
+    echo "$(tput setaf 3) Running mutant $mutant_id against test case $tst $(tput sgr0)" 
     echo "$deco"
     echo -n "${mutant_id};COMPILED;${tst};" >> $results_file
 
