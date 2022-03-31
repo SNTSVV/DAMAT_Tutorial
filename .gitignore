@@ -56,4 +56,4 @@ damat-pipeline/coverage_log
 damat-pipeline/testlists/*
 damat-pipeline/testlists
 damat-pipeline/results/*
-damat-pipeline/results
+damat-pipeline/results*
