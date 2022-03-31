@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include <csp/csp.h>
+#include <csp/csp_types.h>
 #include <csp/drivers/can_socketcan.h>
 #include <csp/drivers/usart.h>
 #include <csp/interfaces/csp_if_zmqhub.h>
@@ -24,6 +25,12 @@ static uint8_t server_address = 255;
  * the loopback interface */
 static unsigned int server_received = 0;
 
+/* priority check */
+int sent_src = 666;
+int read_src = 555;
+int sent_dst = 666;
+int read_dst = 555;
+
 /* Server task - handles requests from clients */
 void server(void) {
 
@@ -39,13 +46,14 @@ void server(void) {
 
   /* Create a backlog of 10 connections, i.e. up to 10 new connections can be
    * queued */
-  csp_listen(&sock, 10);
+  csp_listen(&sock, 1);
 
   /* Wait for connections and then process packets on the connection */
   while (1) {
 
     /* Wait for a new connection, 10000 mS timeout */
     csp_conn_t *conn;
+
     if ((conn = csp_accept(&sock, 10000)) == NULL) {
       /* timeout */
       continue;
@@ -59,21 +67,6 @@ void server(void) {
     int conn_pri = csp_conn_pri_faqas(conn);
     csp_print("pri read_pre %d \n", conn_pri);
 
-    int conn_dport = csp_conn_dport(conn);
-    csp_print("dport read_pre %d \n", conn_dport);
-
-    int conn_sport = csp_conn_sport(conn);
-    csp_print("sport read_pre %d \n", conn_sport);
-
-    int conn_dst = csp_conn_dst(conn);
-    csp_print("dst read_pre %d \n", conn_dst);
-
-    int conn_src = csp_conn_src(conn);
-    csp_print("src read_pre %d \n", conn_src);
-
-    int conn_flags = csp_conn_flags(conn);
-    csp_print("flags read_pre %d \n", conn_flags);
-
     /* end of prints for faqas */
 
     while ((packet = csp_read(conn, 50)) != NULL) {
@@ -83,27 +76,18 @@ void server(void) {
       int conn_pri = csp_conn_pri_faqas(conn);
       csp_print("pri read %d \n", conn_pri);
 
-      int conn_dport = csp_conn_dport(conn);
-      csp_print("dport read %d \n", conn_dport);
-
-      int conn_sport = csp_conn_sport(conn);
-      csp_print("sport read %d \n", conn_sport);
-
-      int conn_dst = csp_conn_dst(conn);
-      csp_print("dst read %d \n", conn_dst);
-      csp_print("dst size = %d \n", sizeof_idin_dst(conn));
-
-      int conn_src = csp_conn_src(conn);
-      csp_print("src read %d \n", conn_src);
-      csp_print("pri size = %d \n", sizeof_idin_src(conn));
-
-      int conn_flags = csp_conn_flags(conn);
-      csp_print("flags read %d \n", conn_flags);
-
-      /* end of prints for faqas */
-
       switch (csp_conn_dport(conn)) {
       case MY_SERVER_PORT:
+
+        /* save priority */
+        if (server_received == 0) {
+          read_src = csp_conn_src(conn);
+          read_dst = csp_conn_dst(conn);
+
+          csp_print("read src %d \n", read_src);
+          csp_print("read dst %d \n", read_dst);
+        }
+
         /* Process packet here */
         csp_print("Packet received on MY_SERVER_PORT: %s\n",
                   (char *)packet->data);
@@ -134,78 +118,60 @@ void client(void) {
 
   unsigned int count = 'A';
 
-  while (1) {
+  /* Send ping to server, timeout 1000 mS, ping size 100 bytes */
+  int result = csp_ping(server_address, 1000, 100, CSP_O_NONE);
+  csp_print("Ping address: %u, result %d [mS]\n", server_address, result);
+  (void)result;
 
-    usleep(200000);
+  /* Send reboot request to server, the server has no actual implementation of
+   * csp_sys_reboot() and fails to reboot */
+  csp_reboot(server_address);
+  csp_print("reboot system request sent to address: %u\n", server_address);
 
-    /* Send ping to server, timeout 1000 mS, ping size 100 bytes */
-    int result = csp_ping(server_address, 1000, 100, CSP_O_NONE);
-    csp_print("Ping address: %u, result %d [mS]\n", server_address, result);
-    (void)result;
+  /* Send data packet (string) to server */
 
-    /* Send reboot request to server, the server has no actual implementation of
-     * csp_sys_reboot() and fails to reboot */
-    csp_reboot(server_address);
-    csp_print("reboot system request sent to address: %u\n", server_address);
-
-    /* Send data packet (string) to server */
-
-    /* 1. Connect to host on 'server_address', port MY_SERVER_PORT with regular
-     * UDP-like protocol and 1000 ms timeout */
-    csp_conn_t *conn = csp_connect(CSP_PRIO_NORM, server_address,
-                                   MY_SERVER_PORT, 1000, CSP_O_NONE);
-    if (conn == NULL) {
-      /* Connect failed */
-      csp_print("Connection failed\n");
-      return;
-    }
-
-    /* 2. Get packet buffer for message/data */
-    csp_packet_t *packet = csp_buffer_get(100);
-    if (packet == NULL) {
-      /* Could not get buffer element */
-      csp_print("Failed to get CSP buffer\n");
-      return;
-    }
-
-    /* 3. Copy data to packet */
-    memcpy(packet->data, "Hello world ", 12);
-    memcpy(packet->data + 12, &count, 1);
-    memset(packet->data + 13, 0, 1);
-    count++;
-
-    /* 4. Set packet length */
-    packet->length =
-        (strlen((char *)packet->data) + 1); /* include the 0 termination */
-
-    /* start of prints for faqas */
-
-    int conn_pri = csp_conn_pri_faqas(conn);
-    csp_print("pri send %d \n", conn_pri);
-
-    int conn_dport = csp_conn_dport(conn);
-    csp_print("dport send %d \n", conn_dport);
-
-    int conn_sport = csp_conn_sport(conn);
-    csp_print("sport send %d \n", conn_sport);
-
-    int conn_dst = csp_conn_dst(conn);
-    csp_print("dst send %d \n", conn_dst);
-
-    int conn_src = csp_conn_src(conn);
-    csp_print("src send %d \n", conn_src);
-
-    int conn_flags = csp_conn_flags(conn);
-    csp_print("flags send %d \n", conn_flags);
-
-    /* end of prints for faqas */
-
-    /* 5. Send packet */
-    csp_send(conn, packet);
-
-    /* 6. Close connection */
-    csp_close(conn);
+  /* 1. Connect to host on 'server_address', port MY_SERVER_PORT with regular
+   * UDP-like protocol and 1000 ms timeout */
+  csp_conn_t *conn = csp_connect(CSP_PRIO_NORM, server_address, MY_SERVER_PORT,
+                                 1000, CSP_O_NONE);
+  if (conn == NULL) {
+    /* Connect failed */
+    csp_print("Connection failed\n");
+    return;
   }
+
+  /* 2. Get packet buffer for message/data */
+  csp_packet_t *packet = csp_buffer_get(100);
+  if (packet == NULL) {
+    /* Could not get buffer element */
+    csp_print("Failed to get CSP buffer\n");
+    return;
+  }
+
+  /* 3. Copy data to packet */
+  memcpy(packet->data, "Hello world ", 12);
+  memcpy(packet->data + 12, &count, 1);
+  memset(packet->data + 13, 0, 1);
+  count++;
+
+  /* 4. Set packet length */
+  packet->length =
+      (strlen((char *)packet->data) + 1); /* include the 0 termination */
+
+  /* end of prints for faqas */
+
+  /* save the src and dst */
+  sent_src = csp_conn_src(conn);
+  sent_dst = csp_conn_dst(conn);
+
+  csp_print("sent src %d \n", sent_src);
+  csp_print("sent dst %d \n", sent_dst);
+
+  /* 5. Send packet */
+  csp_send(conn, packet);
+
+  /* 6. Close connection */
+  csp_close(conn);
 
   return;
 }
@@ -317,11 +283,27 @@ int main(void) {
 
     /* This test is intended for checking that host & client can exchange
      * packets over loopback */
-    if (server_received < 5) {
-      csp_print("Server received %u packets\n", server_received);
+    if (server_received < 1) {
+      csp_print("Server received %u packet(s)\n", server_received);
       exit(1);
     }
-    csp_print("Server received %u packets\n", server_received);
+
+    /* This test is intended to check that priority is the same */
+    if (sent_src != read_src) {
+      csp_print("Server received %u packet(s) with the wrong source\n",
+                server_received);
+      exit(1);
+    }
+
+    if (sent_dst != read_dst) {
+      csp_print("Server received %u packet(s) with the wrong destination\n",
+                server_received);
+      exit(1);
+    }
+
+    csp_print(
+        "Server received %u packet(s) with the right source and destination\n",
+        server_received);
     exit(0);
   }
 
