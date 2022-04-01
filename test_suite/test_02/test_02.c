@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 #include <csp/csp.h>
-#include <csp/csp_types.h>
 #include <csp/drivers/can_socketcan.h>
 #include <csp/drivers/usart.h>
 #include <csp/interfaces/csp_if_zmqhub.h>
@@ -24,10 +23,18 @@ static uint8_t server_address = 255;
 /* test mode, used for verifying that host & client can exchange packets over
  * the loopback interface */
 static unsigned int server_received = 0;
+unsigned int packet_sent = 0;
 
 /* priority check */
-int sent_priority = 666;
-int read_priority = 666;
+int sent_priorities[4];
+int read_priorities[4];
+
+int print_array(int array[4]) {
+  csp_print("[") for (unsigned i = 0; i < 4; i++) {
+    csp_print(" %d ", array[i]);
+  }
+  csp_print("]\n")
+}
 
 /* Server task - handles requests from clients */
 void server(void) {
@@ -44,7 +51,7 @@ void server(void) {
 
   /* Create a backlog of 10 connections, i.e. up to 10 new connections can be
    * queued */
-  csp_listen(&sock, 1);
+  csp_listen(&sock, 10);
 
   /* Wait for connections and then process packets on the connection */
   while (1) {
@@ -60,28 +67,11 @@ void server(void) {
     /* Read packets on connection, timout is 100 mS */
     csp_packet_t *packet;
 
-    /* start of prints for faqas */
-
-    int conn_pri = csp_conn_pri_faqas(conn);
-    csp_print("pri read_pre %d \n", conn_pri);
-
-    /* end of prints for faqas */
-
     while ((packet = csp_read(conn, 50)) != NULL) {
-
-      /* start of prints for faqas */
-
-      int conn_pri = csp_conn_pri_faqas(conn);
-      csp_print("pri read %d \n", conn_pri);
 
       switch (csp_conn_dport(conn)) {
       case MY_SERVER_PORT:
-
-        /* save priority */
-        if (server_received == 0) {
-          read_priority = conn_pri;
-        }
-
+        read_priorities[server_received] = csp_conn_pri_faqas(conn);
         /* Process packet here */
         csp_print("Packet received on MY_SERVER_PORT: %s\n",
                   (char *)packet->data);
@@ -112,62 +102,68 @@ void client(void) {
 
   unsigned int count = 'A';
 
-  /* Send ping to server, timeout 1000 mS, ping size 100 bytes */
-  int result = csp_ping(server_address, 1000, 100, CSP_O_NONE);
-  csp_print("Ping address: %u, result %d [mS]\n", server_address, result);
-  (void)result;
+  while (packet_sent < 4) { /* Send data packet (string) to server */
 
-  /* Send reboot request to server, the server has no actual implementation of
-   * csp_sys_reboot() and fails to reboot */
-  csp_reboot(server_address);
-  csp_print("reboot system request sent to address: %u\n", server_address);
+    csp_conn_t *conn;
 
-  /* Send data packet (string) to server */
+    switch (packet_sent) {
+    case 0:
+      sent_priorities[packet_sent] = CSP_PRIO_CRITICAL;
+      conn = csp_connect(CSP_PRIO_CRITICAL, server_address, MY_SERVER_PORT,
+                         1000, CSP_O_NONE);
+      break;
+    case 1:
+      sent_priorities[packet_sent] = CSP_PRIO_HIGH;
+      conn = csp_connect(CSP_PRIO_HIGH, server_address, MY_SERVER_PORT, 1000,
+                         CSP_O_NONE);
+      break;
+    case 2:
+      sent_priorities[packet_sent] = CSP_PRIO_NORM;
+      conn = csp_connect(CSP_PRIO_NORM, server_address, MY_SERVER_PORT, 1000,
+                         CSP_O_NONE);
+      break;
+    case 3:
+      sent_priorities[packet_sent] = CSP_PRIO_LOW;
+      conn = csp_connect(CSP_PRIO_LOW, server_address, MY_SERVER_PORT, 1000,
+                         CSP_O_NONE);
+      break;
+    }
 
-  /* 1. Connect to host on 'server_address', port MY_SERVER_PORT with regular
-   * UDP-like protocol and 1000 ms timeout */
-  csp_conn_t *conn = csp_connect(CSP_PRIO_NORM, server_address, MY_SERVER_PORT,
-                                 1000, CSP_O_NONE);
-  if (conn == NULL) {
-    /* Connect failed */
-    csp_print("Connection failed\n");
-    return;
+    /* 1. Connect to host on 'server_address', port MY_SERVER_PORT with regular
+     * UDP-like protocol and 1000 ms timeout */
+
+    if (conn == NULL) {
+      /* Connect failed */
+      csp_print("Connection failed\n");
+      return;
+    }
+
+    /* 2. Get packet buffer for message/data */
+    csp_packet_t *packet = csp_buffer_get(100);
+    if (packet == NULL) {
+      /* Could not get buffer element */
+      csp_print("Failed to get CSP buffer\n");
+      return;
+    }
+
+    /* 3. Copy data to packet */
+    memcpy(packet->data, "Hello world ", 12);
+    memcpy(packet->data + 12, &count, 1);
+    memset(packet->data + 13, 0, 1);
+    count++;
+
+    /* 4. Set packet length */
+    packet->length =
+        (strlen((char *)packet->data) + 1); /* include the 0 termination */
+
+    /* 5. Send packet */
+    csp_send(conn, packet);
+
+    /* 6. Close connection */
+    csp_close(conn);
+
+    packet_sent++;
   }
-
-  /* 2. Get packet buffer for message/data */
-  csp_packet_t *packet = csp_buffer_get(100);
-  if (packet == NULL) {
-    /* Could not get buffer element */
-    csp_print("Failed to get CSP buffer\n");
-    return;
-  }
-
-  /* 3. Copy data to packet */
-  memcpy(packet->data, "Hello world ", 12);
-  memcpy(packet->data + 12, &count, 1);
-  memset(packet->data + 13, 0, 1);
-  count++;
-
-  /* 4. Set packet length */
-  packet->length =
-      (strlen((char *)packet->data) + 1); /* include the 0 termination */
-
-  /* start of prints for faqas */
-
-  int conn_pri = csp_conn_pri_faqas(conn);
-  csp_print("pri send %d \n", conn_pri);
-
-  /* end of prints for faqas */
-
-  /* save the priority */
-  sent_priority = conn_pri;
-
-  /* 5. Send packet */
-  csp_send(conn, packet);
-
-  /* 6. Close connection */
-  csp_close(conn);
-
   return;
 }
 /* End of client task */
@@ -278,16 +274,17 @@ int main(void) {
 
     /* This test is intended for checking that host & client can exchange
      * packets over loopback */
-    if (server_received < 1) {
-      csp_print("Server received %u packet(s)\n", server_received);
-      exit(1);
-    }
+    csp_print("sent_priorities: ");
+    print_array(sent_priorities);
+    csp_print("read_priorities: ");
+    print_array(read_priorities);
 
-    /* This test is intended to check that priority is the same */
-    if (sent_priority != read_priority) {
-      csp_print("Server received %u packet(s) with the wrong priority\n",
-                server_received);
-      exit(1);
+    for (unsigned i = 0; i < 5; i++) {
+      if (read_priorities[i] != sent_priorities[i]) {
+        csp_print(
+            "sent and received priorities do not correspond in packet %d\n", i);
+        exit(1);
+      }
     }
 
     csp_print("Server received %u packet(s) with the correct priority\n",
