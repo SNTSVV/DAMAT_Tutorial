@@ -228,7 +228,7 @@ A summary of the metrics and table is contained in a more readable format in the
 ```
 summary_of_the_results.xlsx
 ```
-### Improving the mutation score
+### Improving the Mutation Score
 
 We can improve the mutation score by adding new test cases that exercise the _Data Items_ not covered by the test suite and contain oracles on their values. In this case, this being an integration test suite, our primary focus is to check whether the different components (server and client) interact in a correct manner and if the connection data contained in the structure _csp\_conn\_t_ is correctly handled and preserved through these interactions.
 
