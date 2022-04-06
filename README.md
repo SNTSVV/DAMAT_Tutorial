@@ -1,3 +1,8 @@
+
+*Copyright (c) University of Luxembourg 2020.*
+
+*Created by Enrico VIGANO, enrico.vigano@uni.lu, SnT, 2022.*
+
 # DAMAt example
 
 ## Introduction
@@ -218,4 +223,4 @@ The file
 ```
 results/final_mutants_table.csv
 ```
-contains information on the status of every single mutant. This file will allow us to see what fault models, data items and input partitions in particular are not well tested due to the test suite's shortcomings
+contains information on the status of every single mutant. This file will allow us to see what fault models, data items and input partitions in particular are not well tested due to the test suite's shortcomings.
