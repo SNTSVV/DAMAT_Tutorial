@@ -33,7 +33,7 @@ if [ $singleton == "TRUE" ]; then
   EXTRA_FLAGS_SINGL="--singleton TRUE"
 fi
 
-# here the user must invoke the compilation of the SUT, we provided a simple example.
+# here the user must invoke the compilation of the SUT
 
 compilation_folder="/home/vagrant/libcsp_workspace/libcsp"
 

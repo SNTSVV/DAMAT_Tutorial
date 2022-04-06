@@ -23,7 +23,7 @@ mutants_table=$DAMAt_FOLDER/FAQAS_mutants_table.csv
 tests_list=$DAMAt_FOLDER/tests.csv
 
 # the location of the csv containing the definitions of the mutation operators
-fault_model=$DAMAt_FOLDER/double_fault_model_libcsp.csv
+fault_model=$DAMAt_FOLDER/fault_model_libcsp.csv
 
 # the datatype of the elements of the target buffer
 buffer_type="int"
