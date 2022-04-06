@@ -5,6 +5,8 @@ CSP_INCLUDE=../libcsp/include
 CSP_AUTOCONFIG=../libcsp/build/
 # HEADERS=utils/headers
 
+all: test_01 test_02 test_03 test_04 test_05
+
 test_01: test_01.o
 	./test_01/test_01.o
 test_01.o:
@@ -32,8 +34,8 @@ test_05.o:
 
 .PHONY: clean
 clean:
-	rm test_01/test_01.o
-	rm test_02/test_02.o
-	rm test_03/test_03.o
-	rm test_04/test_04.o
-	rm test_05/test_05.o
+	rm -f test_01/test_01.o
+	rm -f test_02/test_02.o
+	rm -f test_03/test_03.o
+	rm -f test_04/test_04.o
+	rm -f test_05/test_05.o
