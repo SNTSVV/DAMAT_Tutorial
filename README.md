@@ -224,3 +224,18 @@ The file
 results/final_mutants_table.csv
 ```
 contains information on the status of every single mutant. This file will allow us to see what fault models, data items and input partitions in particular are not well tested due to the test suite's shortcomings.
+A summary of the metrics and table is contained in a more readable format in the file
+```
+summary_of_the_results.xlsx
+```
+### Improving the mutation score
+
+We can improve the mutation score by adding new test cases that exercise the _Data Items_ not covered by the test suite and contain oracles on their values. In this case, this being an integration test suite, our primary focus is to check whether the different components (server and client) interact in a correct manner and if the connection data contained in the structure _csp\_conn\_t_ is correctly handled and preserved through these interactions.
+
+#### Test 02: Priority (pri)
+
+#### Test 03: Source (src) and Destination (dst)
+
+#### Test 04: Source Port (sport) and Destination Port (dport)
+
+#### Test 05: Flags (flags)
