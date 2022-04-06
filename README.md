@@ -234,8 +234,28 @@ We can improve the mutation score by adding new test cases that exercise the _Da
 
 #### Test 02: Priority (pri)
 
+After adding _test\_02_ to the test suite and reexecuting _DAMAt_, the metrics become the following:
+* _Fault Model Coverage_ 100%
+* _Mutation Operation Coverage_ 75.9%
+* _Mutation Score_ 50%
+
 #### Test 03: Source (src) and Destination (dst)
+
+After adding _test\_03_ to the test suite and reexecuting _DAMAt_, the metrics become the following:
+* _Fault Model Coverage_ 100%
+* _Mutation Operation Coverage_ 75.9%
+* _Mutation Score_ 50%
 
 #### Test 04: Source Port (sport) and Destination Port (dport)
 
+After adding _test\_04_ to the test suite and reexecuting _DAMAt_, the metrics become the following:
+* _Fault Model Coverage_ 100%
+* _Mutation Operation Coverage_ 75.9%
+* _Mutation Score_ 50%
+
 #### Test 05: Flags (flags)
+
+After adding _test\_05_ to the test suite and reexecuting _DAMAt_, the metrics become the following:
+* _Fault Model Coverage_ 100%
+* _Mutation Operation Coverage_ 75.9%
+* _Mutation Score_ 50%
