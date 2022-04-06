@@ -79,7 +79,7 @@ with open(str(final_mutants_table), 'r') as table, open((str(working_folder) + "
 
     operator_coverage = float(applied_nr)/float(covered_nr)
 
-    outwrite.writerow(["covered_mutants", "applied_mutants", "operator_coverage"])
+    outwrite.writerow(["covered_mutants", "applied_mutants", "mutation_operation_coverage"])
     outwrite.writerow([covered_nr, applied_nr, round(operator_coverage, 3)])
     print(["covered_mutants", "applied_mutants", "operator_coverage"])
     print([covered_nr, applied_nr, round(operator_coverage, 3)])
