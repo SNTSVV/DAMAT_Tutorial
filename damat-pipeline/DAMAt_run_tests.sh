@@ -41,14 +41,13 @@ while IFS="," read -r p || [ -n "$p" ];do
     TIMEOUT=$(echo "$p" | awk -F',' '{$2=($2*4)/1000; printf("%.0f\n", $2);}')
 
     echo "$deco"
-    echo "$(tput setaf 3) Running mutant $mutant_id against test case $tst $(tput sgr0)" 
+    echo "$(tput setaf 3) Running mutant $mutant_id against test case $tst $(tput sgr0)"
     echo "$deco"
     echo -n "${mutant_id};COMPILED;${tst};" >> $results_file
 
 
 ###############################################################################
 # here the user shall call the execution of the current test case,
-# we provided a simple example
 
   pushd /home/vagrant/libcsp_workspace/test_suite
 
@@ -109,6 +108,19 @@ while IFS="," read -r p || [ -n "$p" ];do
 	NEW_COVERAGE_FILE=$mutant_dir/coverage_"$tst".csv
 	cp $coverage_file $NEW_COVERAGE_FILE
 	>$FAQAS_COVERAGE_FILE
+
+
+# break in case the mutant is killed
+  if [ $EXEC_RET_CODE -ge 124 ]; then
+    echo "$deco"
+  else
+      if [ $EXEC_RET_CODE -eq 0 ]; then
+        echo "$deco"
+      else
+        echo "$deco"
+        break
+      fi
+  fi
 
 done < $tests_list
 
