@@ -47,8 +47,6 @@ csp_packet_t * csp_read(csp_conn_t * conn, uint32_t timeout) {
 
 	/* mutation probe */
 
-	// printf("probe csp_read\n");
-
 	int damat_buffer_read[7];
 
 	damat_buffer_read[0] = 0;
@@ -68,7 +66,7 @@ csp_packet_t * csp_read(csp_conn_t * conn, uint32_t timeout) {
 	conn->idin.sport = damat_buffer_read[5];
 	conn->idin.flags = damat_buffer_read[6];
 
-	// /* end of the probe */
+	/* end of the probe */
 
 	csp_packet_t * packet = NULL;
 
