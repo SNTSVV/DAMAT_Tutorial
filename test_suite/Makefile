@@ -25,9 +25,15 @@ test_04: test_04.o
 test_04.o:
 	$(CC) test_04/test_04.c $(UTILS) $(LIBCSP) $(LIBRARIES) -I$(CSP_AUTOCONFIG) -I$(CSP_INCLUDE) -o test_04/test_04.o
 
+test_05: test_05.o
+	./test_05/test_05.o
+test_05.o:
+	$(CC) test_05/test_05.c $(UTILS) $(LIBCSP) $(LIBRARIES) -I$(CSP_AUTOCONFIG) -I$(CSP_INCLUDE) -o test_05/test_05.o
+
 .PHONY: clean
 clean:
 	rm test_01/test_01.o
 	rm test_02/test_02.o
 	rm test_03/test_03.o
 	rm test_04/test_04.o
+	rm test_05/test_05.o

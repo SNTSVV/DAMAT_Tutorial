@@ -228,6 +228,7 @@ tx_err:
 /* this functions was modified with a probe by DAMAT */
 
 void csp_send(csp_conn_t * conn, csp_packet_t * packet) {
+
 	/* mutation probe */
 
 	int damat_buffer_send[7];
@@ -251,6 +252,7 @@ void csp_send(csp_conn_t * conn, csp_packet_t * packet) {
 	set_conn_idin_flags(conn, damat_buffer_send[6]);
 
 	/* end of the probe */
+
 	if (packet == NULL) {
 		return;
 	}
@@ -271,6 +273,8 @@ void csp_send(csp_conn_t * conn, csp_packet_t * packet) {
 
 	csp_send_direct(conn->idout, packet, NULL);
 }
+
+/* end of mutated function */
 
 void csp_send_prio(uint8_t prio, csp_conn_t * conn, csp_packet_t * packet) {
 	conn->idout.pri = prio;

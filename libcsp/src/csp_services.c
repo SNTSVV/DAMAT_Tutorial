@@ -1,4 +1,6 @@
-
+/* FAQAS inclusions */
+#include <stdio.h>
+/* end of inclusions */
 
 #include <csp/csp.h>
 
@@ -36,6 +38,11 @@ int csp_ping(uint16_t node, uint32_t timeout, unsigned int size, uint8_t conn_op
 
 	/* Read incoming frame */
 	packet = csp_read(conn, timeout);
+
+	/* FAQAS addition */
+	printf("ping has called csp_read\n");
+	/* end of addition */
+
 	if (packet == NULL)
 		goto out;
 

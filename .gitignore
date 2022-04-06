@@ -57,3 +57,4 @@ damat-pipeline/testlists/*
 damat-pipeline/testlists
 damat-pipeline/results/*
 damat-pipeline/results*
+test_suite/test_01/test_01_prints.c
