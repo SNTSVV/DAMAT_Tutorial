@@ -198,10 +198,24 @@ cd damat-pipeline
 ./DAMAt_mutants_launcher.sh
 
 ```
-When the execution is complete you will see a similar message:
+When the execution is complete you will see this message:
 
 
 TODO: add the final output
 
 
 ## Improving on the existing test suite
+
+After the first execution of _DAMAt_, the metrics describing the performance of the test suite are the following:
+* _Fault Model Coverage_ 100%
+* _Mutation Operation Coverage_ 75.9%
+* _Mutation Score_ 50%
+
+At a first glance we can see that not all the input partitions have been covered, since the _MOC_ is < 100%, and some oracles are missing or incomplete, since the _MS_ is < 100%.
+This will already point us in the right direction when we think of what we need to do to improve the test suite.
+
+The file
+```
+results/final_mutants_table.csv
+```
+contains information on the status of every single mutant. This file will allow us to see what fault models, data items and input partitions in particular are not well tested due to the test suite's shortcomings
