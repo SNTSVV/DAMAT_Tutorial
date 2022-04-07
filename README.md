@@ -217,7 +217,7 @@ After the first execution of _DAMAt_, the metrics describing the performance of 
 * _Mutation Score_ 50%
 
 At a first glance we can see that not all the input partitions have been covered, since the _MOC_ is < 100%, and some oracles are missing or incomplete, since the _MS_ is < 100%.
-This will already point us in the right direction when we think of what we need to do to improve the test suite.
+This will highlight possible improvements needed by the test suite.
 
 The file
 ```
@@ -228,34 +228,42 @@ A summary of the metrics and table is contained in a more readable format in the
 ```
 summary_of_the_results.xlsx
 ```
+which contains a summary of the various statistic regarding the test suite during the improvement process.
+
 ### Improving the Mutation Score
 
 We can improve the mutation score by adding new test cases that exercise the _Data Items_ not covered by the test suite and contain oracles on their values. In this case, this being an integration test suite, our primary focus is to check whether the different components (server and client) interact in a correct manner and if the connection data contained in the structure _csp\_conn\_t_ is correctly handled and preserved through these interactions.
+
+By looking at the mutants that were _APPLIED_ but not _KILLED_ by the test suite, we notice that they belong to some specific members of the _csp\_conn\_t_ structure:
+*  _conn->idin.pri_ and _conn->idout.pri_, which define the priority of the connection;
+* _conn->idin.src_, _conn->idout.src_, _conn->idin.dst_, and _conn->idout.src_, which represent the source and destination;
+* _conn->idin.sport_, which represents the source port.
+
 
 #### Test 02: Priority (pri)
 
 After adding _test\_02_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
 * _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 50%
+* _Mutation Score_ 61.4%
 
 #### Test 03: Source (src) and Destination (dst)
 
 After adding _test\_03_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
 * _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 50%
+* _Mutation Score_ 72.7%
 
 #### Test 04: Source Port (sport) and Destination Port (dport)
 
 After adding _test\_04_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
 * _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 50%
+* _Mutation Score_ 81.8%
 
 #### Test 05: Flags (flags)
 
 After adding _test\_05_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
 * _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 50%
+* _Mutation Score_ 95.5%
