@@ -51,9 +51,9 @@ while IFS="," read -r p || [ -n "$p" ];do
 
   pushd /home/vagrant/libcsp_workspace/test_suite
 
-  echo "$deco"
-  echo "$(tput setaf 1) RUNNING THE TEST NOW! $(tput sgr0)"
-  echo "$deco"
+  echo "$deco" 2>&1 | tee -a $execution_log
+  echo "$(tput setaf 1) RUNNING THE TEST NOW! $(tput sgr0)" 2>&1 | tee -a $execution_log
+  echo "$deco" 2>&1 | tee -a $execution_log
 
   # timeout 30 ./build/examples/csp_server_client -t
   make clean
@@ -61,9 +61,9 @@ while IFS="," read -r p || [ -n "$p" ];do
 
   EXEC_RET_CODE=$?
 
-  echo "$deco"
-  echo "$(tput setaf 2) FINITO! $(tput sgr0)"
-  echo "$deco"
+  echo "$deco" 2>&1 | tee -a $execution_log
+  echo "$(tput setaf 2) FINITO! $(tput sgr0)" 2>&1 | tee -a $execution_log
+  echo "$deco" 2>&1 | tee -a $execution_log
 
   popd
 
@@ -77,23 +77,23 @@ while IFS="," read -r p || [ -n "$p" ];do
 
 
   if [ $EXEC_RET_CODE -ge 124 ]; then
-    echo "$deco"
-    echo "Test return code: [$EXEC_RET_CODE]"
-    echo "$(tput setaf 1) Mutant timeout by $tst $(tput sgr0)"
+    echo "$deco" 2>&1 | tee -a $execution_log
+    echo "Test return code: [$EXEC_RET_CODE]" 2>&1 | tee -a $execution_log
+    echo "$(tput setaf 1) Mutant timeout by $tst $(tput sgr0)" 2>&1 | tee -a $execution_log
     echo -ne "TIMEOUT;KILLED_${EXEC_RET_CODE};${mutant_elapsed}\n" >> $results_file
     echo "$deco"
   else
       if [ $EXEC_RET_CODE -eq 0 ]; then
-        echo "$deco"
-        echo "Test return code: [$EXEC_RET_CODE]"
-        echo "$(tput setaf 2) live mutant $(tput sgr0)"
+        echo "$deco" 2>&1 | tee -a $execution_log
+        echo "Test return code: [$EXEC_RET_CODE]" 2>&1 | tee -a $execution_log
+        echo "$(tput setaf 2) live mutant $(tput sgr0)" 2>&1 | tee -a $execution_log
         echo -ne "PASSED;LIVE;${mutant_elapsed}\n" >> $results_file
         echo "$deco"
 
       else
         echo "$deco"
-        echo "Test return code: [$EXEC_RET_CODE]"
-        echo "$(tput setaf 1) Mutant killed by $tst $(tput sgr0)"
+        echo "Test return code: [$EXEC_RET_CODE]" 2>&1 | tee -a $execution_log
+        echo "$(tput setaf 1) Mutant killed by $tst $(tput sgr0)" 2>&1 | tee -a $execution_log
         echo -ne "FAILED;KILLED;${mutant_elapsed}\n" >> $results_file
         echo "$deco"
 
@@ -110,17 +110,17 @@ while IFS="," read -r p || [ -n "$p" ];do
 	>$FAQAS_COVERAGE_FILE
 
 
-# break in case the mutant is killed
-  if [ $EXEC_RET_CODE -ge 124 ]; then
-    echo "$deco"
-  else
-      if [ $EXEC_RET_CODE -eq 0 ]; then
-        echo "$deco"
-      else
-        echo "$deco"
-        break
-      fi
-  fi
+# # break in case the mutant is killed
+#   if [ $EXEC_RET_CODE -ge 124 ]; then
+#     echo "$deco"
+#   else
+#       if [ $EXEC_RET_CODE -eq 0 ]; then
+#         echo "$deco"
+#       else
+#         echo "$deco"
+#         break
+#       fi
+#   fi
 
 done < $tests_list
 
