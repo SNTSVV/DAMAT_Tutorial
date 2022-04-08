@@ -247,40 +247,30 @@ int csp_conn_pri_faqas(csp_conn_t * conn);
 
 /* added by FAQAS
  */
-void set_conn_idin_pri(csp_conn_t * conn, int v);
+int csp_conn_pri_out_faqas(csp_conn_t * conn);
 
 /* added by FAQAS
  */
-void set_conn_idin_src(csp_conn_t * conn, int v);
+int csp_conn_dport_out(csp_conn_t * conn);
 
 /* added by FAQAS
  */
-void set_conn_idin_dst(csp_conn_t * conn, int v);
+int csp_conn_sport_out(csp_conn_t * conn);
 
 /* added by FAQAS
  */
-void set_conn_idin_dport(csp_conn_t * conn, int v);
+int csp_conn_dst_out(csp_conn_t * conn);
 
 /* added by FAQAS
  */
-void set_conn_idin_sport(csp_conn_t * conn, int v);
+int csp_conn_src_out(csp_conn_t * conn);
 
 /* added by FAQAS
  */
-void set_conn_idin_flags(csp_conn_t * conn, int v);
+int csp_conn_flags_out(csp_conn_t * conn);
 
 /* added by FAQAS
  */
-int sizeof_idin_src(csp_conn_t * conn);
-
-/* added by FAQAS
- */
-
-int sizeof_idin_dst(csp_conn_t * conn);
-
-/* added by FAQAS
- */
-
 int csp_listen(csp_socket_t * socket, size_t backlog);
 
 /**

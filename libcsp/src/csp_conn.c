@@ -358,47 +358,37 @@ int csp_conn_flags(csp_conn_t * conn) {
 
 int csp_conn_pri_faqas(csp_conn_t * conn) {
 
-	return conn->idin.pri;
+	return conn->idout.pri;
 }
 
-void set_conn_idin_src(csp_conn_t * conn, int v) {
+int csp_conn_pri_out_faqas(csp_conn_t * conn) {
 
-	conn->idin.src = v;
+	return conn->idout.pri;
 }
 
-int sizeof_idin_src(csp_conn_t * conn) {
+int csp_conn_dport_out(csp_conn_t * conn) {
 
-	return sizeof(conn->idin.src);
+	return conn->idout.dport;
 }
 
-void set_conn_idin_dst(csp_conn_t * conn, int v) {
+int csp_conn_sport_out(csp_conn_t * conn) {
 
-	conn->idin.dst = v;
+	return conn->idout.sport;
 }
 
-int sizeof_idin_dst(csp_conn_t * conn) {
+int csp_conn_dst_out(csp_conn_t * conn) {
 
-	return sizeof(conn->idin.dst);
+	return conn->idout.dst;
 }
 
-void set_conn_idin_dport(csp_conn_t * conn, int v) {
+int csp_conn_src_out(csp_conn_t * conn) {
 
-	conn->idin.dport = v;
+	return conn->idout.src;
 }
 
-void set_conn_idin_sport(csp_conn_t * conn, int v) {
+int csp_conn_flags_out(csp_conn_t * conn) {
 
-	conn->idin.sport = v;
-}
-
-void set_conn_idin_flags(csp_conn_t * conn, int v) {
-
-	conn->idin.flags = v;
-}
-
-void set_conn_idin_pri(csp_conn_t * conn, int v) {
-
-	conn->idin.pri = v;
+	return conn->idout.flags;
 }
 
 // end
