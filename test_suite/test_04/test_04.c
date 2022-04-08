@@ -280,7 +280,13 @@ int main(void) {
     for (unsigned i = 0; i < 10; ++i) {
       if (sport_server_archive[i] != dport_client_archive[i] ||
           dport_server_archive[i] != sport_client_archive[i]) {
-        csp_print("dport and sport do not correspond\n");
+        csp_print(" client dport and server sport do not correspond\n");
+        exit(1);
+      }
+
+      if (dport_server_archive[i] != sport_client_archive[i] ||
+          dport_server_archive[i] != sport_client_archive[i]) {
+        csp_print("server dport and client sport do not correspond\n");
         exit(1);
       }
     }
