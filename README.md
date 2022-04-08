@@ -8,6 +8,8 @@
 ## Introduction
 
 This is an example on how to apply the _DAMAt_ tool and procedure to improve an existing test suite.
+This procedure has beeen performed on Ubuntu 20.04.4 LTS.
+
 We decided to use _libCSP_, a C library implementing the Cubesat Space Protocol (CSP), a small protocol stack written to facilitate communication between the components of a CubeSat.
 Additional information on libCSP can be found at this link https://github.com/libcsp/libcsp.
 
@@ -22,22 +24,27 @@ Once uncompressed, inside the _libcsp\_workspace_ directory you will find three 
 * _libcsp_: this folder contains the source code for libCSP.
 * _test\_suite_: this folder contains the test suite under test that we are going to try and improve.
 
-TODO: add a script to easily compile libCSP
-
-TODO: add a section on how to install libcsp and damat dependencies
-
-TODO: maybe virtual machine?
-
-TODO: explain how to execute test_01 and where to find the source code for it.
-
-To execute the first test case run the folllowing commands:
+To compile libCSP and its test cases you will need to install the following packages:
 
 ```shell
-cd test_suite
+sudo apt-get python gcc pkg-config libsocketcan-dev libzmq3-dev
+```
+This version of libcsp has been slighlty modified with the insertion of DAMAt's mutation probes (see Step 3: Inserting the mutation probes).
+To compile it  you will need to go to the _libcsp_ folder and run the following command.
+
+```shell
+./waf distclean configure build --mutation-opt -1 --singleton TRUE --with-os=posix --enable-rdp --enable-promisc --enable-hmac --enable-dedup --enable-can-socketcan --with-driver-usart=linux --enable-if-zmqhub --enable-examples
+```
+The flag _--mutation-opt -1_ will set the mutation probes to an inactive state.
+
+To execute the original test case go to the _test\_suite_ folder and run the folllowing commands:
+
+```shell
 make clean
 make test_01
 
 ```
+The test should pass.
 
 ## Executing DAMAt
 
@@ -143,7 +150,7 @@ csp_packet_t * csp_read(csp_conn_t * conn, uint32_t timeout) {
 }
 
 ```
-The extra line of code are due to the fact that, in its current form, _DAMAt_ can only mutate arrays.
+The extra lines of code are due to the fact that, in its current form, _DAMAt_ can only mutate arrays.
 The file also contains the following inclusion:
 ```c
 #include "FAQAS_dataDrivenMutator.h"
@@ -258,6 +265,8 @@ By looking at the mutants that were _APPLIED_ but not _KILLED_ by the test suite
 * _conn->idin.src_, _conn->idout.src_, _conn->idin.dst_, and _conn->idout.src_, which represent the source and destination;
 * _conn->idin.sport_, which represents the source port.
 
+You can see a summary of the process in the file _summary\_of\_the\_results.xlsx_.
+
 
 #### Test 02: Priority (pri)
 
@@ -285,19 +294,27 @@ test_01,10000
 test_02,10000
 ```
 
-After adding _test\_02_ to the test suite and re-executing _DAMAt_, the metrics became the following:
+After adding _test\_02_ to the test suite and re-executing _DAMAt_, the metrics should become the following:
 * _Fault Model Coverage_ 100%
 * _Mutation Operation Coverage_ 75.9%
 * _Mutation Score_ 61.4%
 
 #### Test 03: Source (src) and Destination (dst)
 
-A test case containing an oracle that checks if the _conn->idin.dst_ and _conn->idout._ coincide between server and client should detect eventual mismanagement of the priority in the connection interfaces, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.After adding _test\_03_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
+A test case containing an oracle that checks the content of _conn->idin.dst_, _conn->idin.src_, _conn->idout.dst_, _conn->idout.src_   should detect eventual alteration of these values between server and client, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.
+
+The test consists in the client sending 5 messages to the server. For every message, the content of the aforementioned members of the _csp_conn_t_ data structure shall be checked for discrepancies between server and client.
+
+After adding _test\_03_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
 * _Mutation Operation Coverage_ 75.9%
 * _Mutation Score_ 72.7%
 
 #### Test 04: Source Port (sport) and Destination Port (dport)
+
+A test case containing an oracle that checks the content of _conn->idin.sport_ and _conn->idin.dport_ should detect eventual alteration of these values between server and client, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.
+
+The test consists in the client sending 4 messages to the server. For every message, the content of the aforementioned members of the _csp_conn_t_ data structure shall be checked for discrepancies between server and client. In particular, the server-side _dport_ shall coincide with the client-side _sport_ and viceversa.
 
 After adding _test\_04_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
@@ -305,6 +322,8 @@ After adding _test\_04_ to the test suite and re-executing _DAMAt_, the metrics 
 * _Mutation Score_ 81.8%
 
 #### Test 05: Flags (flags)
+
+A test case containing an oracle that checks the content of _conn->idin.flags_ and _conn->idin.flags_ should detect eventual alteration of these values between server and client, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.
 
 After adding _test\_05_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
