@@ -1,5 +1,5 @@
 
-*Copyright (c) University of Luxembourg 2020.*
+*Copyright (c) University of Luxembourg 2022.*
 
 *Created by Enrico VIGANO, enrico.vigano@uni.lu, SnT, 2022.*
 
