@@ -13,9 +13,11 @@ Additional information on libCSP can be found at this link https://github.com/li
 
 To apply the _DAMAt_ procedure we need a Software Under Test and the relative test suite to evaluate.
 _LibCSP_ does not come with a test suite, but it includes some examples; starting from one of this examples, we devised an intentionally flawed integration test suite.
-The test suite emulates a server/client configuration over loop-back and verifies that a minimum number of packets is transmitted by the client and correctly received by the server in a given time.
+The test suite contains a single test case that emulates a server/client configuration over loop-back and verifies that a minimum number of packets is transmitted by the client and correctly received by the server in a given time.
 
-Inside the _libcsp\_workspace_ directory you will find three sub-folders:
+## Installation procedure
+
+Once uncompressed, inside the _libcsp\_workspace_ directory you will find three sub-folders:
 * _damat-pipeline_: this folder contains all the scripts and utilities necessary to apply _DAMAt_.
 * _libcsp_: this folder contains the source code for libCSP.
 * _test\_suite_: this folder contains the test suite under test that we are going to try and improve.
@@ -25,6 +27,17 @@ TODO: add a script to easily compile libCSP
 TODO: add a section on how to install libcsp and damat dependencies
 
 TODO: maybe virtual machine?
+
+TODO: explain how to execute test_01 and where to find the source code for it.
+
+To execute the first test case run the folllowing commands:
+
+```shell
+cd test_suite
+make clean
+make test_01
+
+```
 
 ## Executing DAMAt
 
@@ -39,6 +52,12 @@ damat-pipeline/fault_model_libcsp.csv
 
 This _csv_ file contains two _Fault Models_ implementing a total of 55 _Mutation Operators_, which will generate the mutants.
 Then you can make sure that the _DAMAt\_configure.sh_ scripts contains the correct path to the fault model file.
+
+Another _csv_ file, _test.csv_ should contain the following:
+
+```
+test_01,10000
+```
 
 ### Step 2: Generating the mutation API
 
@@ -156,7 +175,7 @@ echo "$deco"
 ```
 ### Step 5: Execute the test suite
 
-As with Step 4, Step 5 will be performed autimatically by the pipeline, but the user must take a few preparatory steps.
+As with Step 4, Step 5 will be performed automatically by the pipeline, but the user must take a few preparatory steps.
 First, the user must provide another simple _csv_ file containing the name of the test case and a normal execution time (useful to set a timeout in case a mutant should cause an infinite loop);
 You can find the one used in this example here:
 ```
@@ -242,14 +261,38 @@ By looking at the mutants that were _APPLIED_ but not _KILLED_ by the test suite
 
 #### Test 02: Priority (pri)
 
-After adding _test\_02_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
+A test case containing an oracle that checks if the _conn->idin.pri_ and _conn->idout.pri_ coincide between server and client should detect eventual mismanagement of the priority in the connection interfaces, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.
+In the test the client will send 4 packages with the four different priorities supported by libcsp:
+* CSP_PRIO_CRITICAL (0)
+* CSP_PRIO_HIGH (1)
+* CSP_PRIO_NORM (2)
+* CSP_PRIO_LOW (3)
+
+The content of _conn->idin.pri_ as received by the server will be checked against the priority etsablished by the client when connecting.
+The test case is implemented in the file
+```
+test_suite/test_02/test_02.c
+```
+and can be executed by moving to the _test\_suite_ folder and executing the following command:
+```shell
+make test_02
+```
+
+Then you can add the test to the _damat-pipeline/tests.csv_, so that it will be recognized and executed by _DAMAt_:
+
+```
+test_01,10000
+test_02,10000
+```
+
+After adding _test\_02_ to the test suite and re-executing _DAMAt_, the metrics became the following:
 * _Fault Model Coverage_ 100%
 * _Mutation Operation Coverage_ 75.9%
 * _Mutation Score_ 61.4%
 
 #### Test 03: Source (src) and Destination (dst)
 
-After adding _test\_03_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
+A test case containing an oracle that checks if the _conn->idin.dst_ and _conn->idout._ coincide between server and client should detect eventual mismanagement of the priority in the connection interfaces, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.After adding _test\_03_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
 * _Mutation Operation Coverage_ 75.9%
 * _Mutation Score_ 72.7%
