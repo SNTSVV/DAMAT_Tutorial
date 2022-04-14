@@ -287,6 +287,7 @@ In the test the client will send 5 packages with the four different priorities d
 * CSP_PRIO_HIGH (1)
 * CSP_PRIO_NORM (2)
 * CSP_PRIO_LOW (3)
+
 Then it will test what happens if the priority is not defined by libcsp, for example if it is equal to 6, thus hopefully improving the _Mutation Operation Coverage_, leading to a more extensive test suite.
 The content of _conn->idin.pri_ as received by the server will be checked against the priority established by the client when connecting.
 The test case is implemented in the file
