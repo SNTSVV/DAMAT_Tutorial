@@ -26,11 +26,13 @@ static unsigned int server_received = 0;
 unsigned int packet_sent = 0;
 
 /* priority check */
-int sent_priorities[4];
-int read_priorities[4];
+int sent_priorities[5];
+int read_priorities[5];
+int sent_priorities_idout[5];
+int read_priorities_idout[5];
 
-int print_array(int array[4]) {
-  csp_print("[") for (unsigned i = 0; i < 4; i++) {
+int print_array(int array[5]) {
+  csp_print("[") for (unsigned i = 0; i < 5; i++) {
     csp_print(" %d ", array[i]);
   }
   csp_print("]\n")
@@ -72,6 +74,8 @@ void server(void) {
       switch (csp_conn_dport(conn)) {
       case MY_SERVER_PORT:
         read_priorities[server_received] = csp_conn_pri_faqas(conn);
+        csp_print("priority read test %d\n", csp_conn_pri_faqas(conn));
+        read_priorities_idout[server_received] = csp_conn_pri_out_faqas(conn);
         /* Process packet here */
         csp_print("Packet received on MY_SERVER_PORT: %s\n",
                   (char *)packet->data);
@@ -102,7 +106,7 @@ void client(void) {
 
   unsigned int count = 'A';
 
-  while (packet_sent < 4) { /* Send data packet (string) to server */
+  while (packet_sent < 5) { /* Send data packet (string) to server */
 
     csp_conn_t *conn;
 
@@ -126,6 +130,12 @@ void client(void) {
       sent_priorities[packet_sent] = CSP_PRIO_LOW;
       conn = csp_connect(CSP_PRIO_LOW, server_address, MY_SERVER_PORT, 1000,
                          CSP_O_NONE);
+      break;
+    case 4:
+      /* special case with undefined priority */
+      usleep(200000);
+      sent_priorities[packet_sent] = 6;
+      conn = csp_connect(6, server_address, MY_SERVER_PORT, 1000, CSP_O_NONE);
       break;
     }
 
@@ -278,6 +288,8 @@ int main(void) {
     print_array(sent_priorities);
     csp_print("read_priorities: ");
     print_array(read_priorities);
+    csp_print("read_priorities_idout: ");
+    print_array(read_priorities_idout);
 
     for (unsigned i = 0; i < 5; i++) {
       if (read_priorities[i] != sent_priorities[i]) {
