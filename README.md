@@ -11,7 +11,7 @@ This is an example on how to apply the _DAMAt_ tool and procedure to improve an 
 This procedure has beeen performed on Ubuntu 20.04.4 LTS.
 
 We decided to use _libCSP_, a C library implementing the Cubesat Space Protocol (CSP), a small protocol stack written to facilitate communication between the components of a CubeSat.
-Additional information on libCSP can be found at this link https://github.com/libcsp/libcsp.
+Additional information on _libCSP_ can be found at this link https://github.com/libcsp/libcsp.
 
 To apply the _DAMAt_ procedure we need a Software Under Test and the relative test suite to evaluate.
 _LibCSP_ does not come with a test suite, but it includes some examples; starting from one of this examples, we devised an intentionally flawed integration test suite.
@@ -24,12 +24,12 @@ Once uncompressed, inside the _libcsp\_workspace_ directory you will find three 
 * _libcsp_: this folder contains the source code for libCSP.
 * _test\_suite_: this folder contains the test suite under test that we are going to try and improve.
 
-To compile libCSP and its test cases you will need to install the following packages:
+To compile _libCSP_ and its test cases you will need to install the following packages:
 
 ```shell
 sudo apt-get python gcc pkg-config libsocketcan-dev libzmq3-dev
 ```
-This version of libcsp has been slighlty modified with the insertion of DAMAt's mutation probes (see Step 3: Inserting the mutation probes).
+This version of _libCSP_ has been slighlty modified with the insertion of DAMAt's mutation probes (see Step 3: Inserting the mutation probes).
 To compile it  you will need to go to the _libcsp_ folder and run the following command.
 
 ```shell
@@ -50,14 +50,14 @@ The test should pass.
 
 ### Step 1: Fault Model Specification
 
-The first step for applying the _DAMAt_ procedure is specifying a fault model. The motivation between the _libCSP_ fault model are included in the _libcsp_fault_model.docx_ file.
-The fault model must be converted to the _csv_ format supported by DAMAt. You can find it here:
+The first step for applying the _DAMAt_ procedure is specifying a fault model.
+The fault model must be written in the _csv_ format supported by DAMAt. You can find it here:
 
 ```
 damat-pipeline/fault_model_libcsp.csv
 ```
 
-This _csv_ file contains two _Fault Models_ implementing a total of 55 _Mutation Operators_, which will generate the mutants.
+This _csv_ file contains two _Fault Models_ implementing a total of 39 _Mutation Operators_, which will generate the mutants.
 Then you can make sure that the _DAMAt\_configure.sh_ scripts contains the correct path to the fault model file.
 
 Another _csv_ file, _test.csv_ should contain the following:
@@ -65,6 +65,7 @@ Another _csv_ file, _test.csv_ should contain the following:
 ```
 test_01,10000
 ```
+The first column should contain the names of the test cases and the second the normal maximum exectuion time.
 
 ### Step 2: Generating the mutation API
 
@@ -282,13 +283,13 @@ By looking at the mutants that were _APPLIED_ but not _KILLED_ by the test suite
 #### Test 02: Priority (pri)
 
 A test case containing an oracle that checks if the _conn->idin.pri_ and _conn->idout.pri_ coincide between server and client should detect eventual mismanagement of the priority in the connection interfaces, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.
-In the test the client will send 5 packages with the four different priorities defined by libcsp:
+In the test the client will send 5 packages with the four different priorities defined by _libCSP_:
 * CSP_PRIO_CRITICAL (0)
 * CSP_PRIO_HIGH (1)
 * CSP_PRIO_NORM (2)
 * CSP_PRIO_LOW (3)
 
-Then it will test what happens if the priority is not defined by libcsp, for example if it is equal to 6, thus hopefully improving the _Mutation Operation Coverage_, leading to a more extensive test suite.
+Then it will test what happens if the priority is not defined by _libCSP_, for example if it is equal to 6, thus hopefully improving the _Mutation Operation Coverage_, leading to a more extensive test suite.
 The content of _conn->idin.pri_ as received by the server will be checked against the priority established by the client when connecting.
 The test case is implemented in the file
 ```
@@ -323,7 +324,7 @@ The test case is implemented in the file
 ```
 test_suite/test_03/test_03.c
 ```
-and can be executed by compiling libcsp, moving to the _test\_suite_ folder and executing the following command:
+and can be executed by compiling _libCSP_, moving to the _test\_suite_ folder and executing the following command:
 ```shell
 make test_03
 ```
@@ -352,7 +353,7 @@ The test case is implemented in the file
 ```
 test_suite/test_04/test_04.c
 ```
-and can be executed by compiling libcsp, moving to the _test\_suite_ folder and executing the following command:
+and can be executed by compiling _libCSP_, moving to the _test\_suite_ folder and executing the following command:
 ```shell
 make test_04
 ```
@@ -379,7 +380,7 @@ The test case is implemented in the file
 ```
 test_suite/test_04/test_04.c
 ```
-and can be executed by compiling libcsp, moving to the _test\_suite_ folder and executing the following command:
+and can be executed by compiling _libCSP_, moving to the _test\_suite_ folder and executing the following command:
 ```shell
 make test_04
 ```
@@ -401,4 +402,4 @@ After adding _test\_05_ to the test suite and re-executing _DAMAt_, the metrics 
 
 ## Conclusion
 This example is intended to show that, with the help of DAMAt, a user can obtain valuable indication on how to improve a test suite.
-The new libcsp test suite, while intentionally still very limited and simple, should be more capable of identifying problems in the SUT than it was at the start.
+The new test suite for  _libCSP_, while intentionally still very limited and simple, should be more capable of identifying problems in the SUT than it was at the start.
