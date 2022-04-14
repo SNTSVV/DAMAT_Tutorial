@@ -239,55 +239,67 @@ TODO: add the final output
 
 After the first execution of _DAMAt_, the metrics describing the performance of the test suite are the following:
 * _Fault Model Coverage_ 100%
-* _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 50%
+* _Mutation Operation Coverage_ 98%
+* _Mutation Score_ 52%
 
 At a first glance we can see that not all the input partitions have been covered, since the _MOC_ is < 100%, and some oracles are missing or incomplete, since the _MS_ is < 100%.
-This will highlight possible improvements needed by the test suite.
 
 The file
 ```
 results/final_mutants_table.csv
 ```
 contains information on the status of every single mutant. This file will allow us to see what fault models, data items and input partitions in particular are not well tested due to the test suite's shortcomings.
-A summary of the metrics and table is contained in a more readable format in the file
+For example the _DataItem_ column contains information on which data item in the buffer is targeted by the mutant. In particurlar:
+	* 1 = conn-><idin/idout>.pri
+	* 2 = conn-><idin/idout>.src
+	* 3 = conn-><idin/idout>.dst
+	* 4 = conn-><idin/idout>.dport
+	* 5 = conn-><idin/idout>.sport
+	* 6 = conn-><idin/idout>.flags
+
+We will add test cases based on the data gathered by DAMAt in order to improve the test suite.
+A summary of this process, including metrics and tables is contained in the file
 ```
 summary_of_the_results.xlsx
 ```
-which contains a summary of the various statistic regarding the test suite during the improvement process.
+
+### Improving the Mutation Operation Coverage
+
+We can improve the _Mutation Operation Coverage_ by adding new test cases that exercise partitions not covered by the test suite such as the ones targeted by mutants that were _NOT\_APPLIED_.
+
+By looking at the mutants that were _NOT\_APPLIED_ we can identify input partitions not covered by the test suite:
+*  there is no test case that covers a value of _conn->idin.pri_ and _conn->idout.pri_ > 3;
 
 ### Improving the Mutation Score
 
-We can improve the mutation score by adding new test cases that exercise the _Data Items_ not covered by the test suite and contain oracles on their values. In this case, this being an integration test suite, our primary focus is to check whether the different components (server and client) interact in a correct manner and if the connection data contained in the structure _csp\_conn\_t_ is correctly handled and preserved through these interactions.
+We can improve the _Mutation Score_ by adding new test cases that contain oracles on the values modified by _LIVE_ mutants. In this case, this being an integration test suite, our primary focus is to check whether the different components (server and client) interact in a correct manner and if the connection data contained in the structure _csp\_conn\_t_ is correctly handled and preserved through these interactions.
 
 By looking at the mutants that were _APPLIED_ but not _KILLED_ by the test suite, we notice that they belong to some specific members of the _csp\_conn\_t_ structure:
 *  _conn->idin.pri_ and _conn->idout.pri_, which define the priority of the connection;
 * _conn->idin.src_, _conn->idout.src_, _conn->idin.dst_, and _conn->idout.src_, which represent the source and destination;
 * _conn->idin.sport_, which represents the source port.
 
-You can see a summary of the process in the file _summary\_of\_the\_results.xlsx_.
-
-
 #### Test 02: Priority (pri)
 
 A test case containing an oracle that checks if the _conn->idin.pri_ and _conn->idout.pri_ coincide between server and client should detect eventual mismanagement of the priority in the connection interfaces, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.
-In the test the client will send 4 packages with the four different priorities supported by libcsp:
+In the test the client will send 5 packages with the four different priorities defined by libcsp:
 * CSP_PRIO_CRITICAL (0)
 * CSP_PRIO_HIGH (1)
 * CSP_PRIO_NORM (2)
 * CSP_PRIO_LOW (3)
-
-The content of _conn->idin.pri_ as received by the server will be checked against the priority etsablished by the client when connecting.
+Then it will test what happens if the priority is not defined by libcsp, for example if it is equal to 6, thus hopefully improving the _Mutation Operation Coverage_, leading to a more extensive test suite.
+The content of _conn->idin.pri_ as received by the server will be checked against the priority established by the client when connecting.
 The test case is implemented in the file
 ```
 test_suite/test_02/test_02.c
 ```
-and can be executed by moving to the _test\_suite_ folder and executing the following command:
+and can be executed by compiling lbcsp, moving to the _test\_suite_ folder and executing the following command:
 ```shell
 make test_02
 ```
 
 Then you can add the test to the _damat-pipeline/tests.csv_, so that it will be recognized and executed by _DAMAt_:
+The file should now contain these lines:
 
 ```
 test_01,10000
@@ -296,8 +308,8 @@ test_02,10000
 
 After adding _test\_02_ to the test suite and re-executing _DAMAt_, the metrics should become the following:
 * _Fault Model Coverage_ 100%
-* _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 61.4%
+* _Mutation Operation Coverage_ 100%
+* _Mutation Score_ 61%
 
 #### Test 03: Source (src) and Destination (dst)
 
@@ -305,10 +317,29 @@ A test case containing an oracle that checks the content of _conn->idin.dst_, _c
 
 The test consists in the client sending 5 messages to the server. For every message, the content of the aforementioned members of the _csp_conn_t_ data structure shall be checked for discrepancies between server and client.
 
+
+The test case is implemented in the file
+```
+test_suite/test_03/test_03.c
+```
+and can be executed by compiling libcsp, moving to the _test\_suite_ folder and executing the following command:
+```shell
+make test_03
+```
+
+Then you can add the test to the _damat-pipeline/tests.csv_, so that it will be recognized and executed by _DAMAt_:
+The file should now contain these lines:
+
+```
+test_01,10000
+test_02,10000
+test_03,10000
+```
+
 After adding _test\_03_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
-* _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 72.7%
+* _Mutation Operation Coverage_ 100%
+* _Mutation Score_ 67%
 
 #### Test 04: Source Port (sport) and Destination Port (dport)
 
@@ -316,16 +347,57 @@ A test case containing an oracle that checks the content of _conn->idin.sport_ a
 
 The test consists in the client sending 4 messages to the server. For every message, the content of the aforementioned members of the _csp_conn_t_ data structure shall be checked for discrepancies between server and client. In particular, the server-side _dport_ shall coincide with the client-side _sport_ and viceversa.
 
+The test case is implemented in the file
+```
+test_suite/test_04/test_04.c
+```
+and can be executed by compiling libcsp, moving to the _test\_suite_ folder and executing the following command:
+```shell
+make test_04
+```
+
+Then you can add the test to the _damat-pipeline/tests.csv_, so that it will be recognized and executed by _DAMAt_:
+The file should now contain these lines:
+```
+test_01,10000
+test_02,10000
+test_03,10000
+test_04,10000
+```
+
 After adding _test\_04_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
-* _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 81.8%
+* _Mutation Operation Coverage_ 100%
+* _Mutation Score_ 81%
 
 #### Test 05: Flags (flags)
 
 A test case containing an oracle that checks the content of _conn->idin.flags_ and _conn->idin.flags_ should detect eventual alteration of these values between server and client, and kill the mutants emulating these kind of faults, that were previously _APPLIED_ but not _KILLED_.
 
+The test case is implemented in the file
+```
+test_suite/test_04/test_04.c
+```
+and can be executed by compiling libcsp, moving to the _test\_suite_ folder and executing the following command:
+```shell
+make test_04
+```
+
+Then you can add the test to the _damat-pipeline/tests.csv_, so that it will be recognized and executed by _DAMAt_:
+The file should now contain these lines:
+
+```
+test_01,10000
+test_02,10000
+test_03,10000
+test_04,10000
+```
+
 After adding _test\_05_ to the test suite and re-executing _DAMAt_, the metrics will become the following:
 * _Fault Model Coverage_ 100%
-* _Mutation Operation Coverage_ 75.9%
-* _Mutation Score_ 95.5%
+* _Mutation Operation Coverage_ 100%
+* _Mutation Score_ 95%
+
+## Conclusion
+This example is intended to show that, with the help of DAMAt, a user can obtain valuable indication on how to improve a test suite.
+The new libcsp test suite, while intentionally still very limited and simple, should be more capable of identifying problems in the SUT than it was at the start.
