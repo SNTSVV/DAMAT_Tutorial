@@ -1,4 +1,4 @@
-//max MUTATIONOPT=57//
+//max MUTATIONOPT=42//
 // Copyright (c) University of Luxembourg 2020.
 // Created by Fabrizio PASTORE, fabrizio.pastore@uni.lu, SnT, 2020.
 // Modified by Oscar Eduardo CORNEJO OLIVARES, oscar.cornejo@uni.lu, SnT, 2020.
@@ -253,21 +253,6 @@ _FAQAS_Read_FM_ptr = fm;
 fm->ID = 0;
 fm->minOperation = 0;
 
-fm->items[1].operators[0].type=INV;
-fm->items[1].operators[0].min=0;
-fm->items[1].operators[0].max=3;
-
-fm->items[1].operators[1].type=VAT;
-fm->items[1].operators[1].threshold=3;
-fm->items[1].operators[1].delta=1;
-
-fm->items[1].operators[2].type=FVAT;
-fm->items[1].operators[2].threshold=3;
-fm->items[1].operators[2].delta=1;
-fm->items[1].operatorsN=3;
-fm->items[1].span=1;
-fm->items[1].type=INT;
-
 fm->items[2].operators[0].type=INV;
 fm->items[2].operators[0].min=0;
 fm->items[2].operators[0].max=31;
@@ -275,11 +260,7 @@ fm->items[2].operators[0].max=31;
 fm->items[2].operators[1].type=VAT;
 fm->items[2].operators[1].threshold=31;
 fm->items[2].operators[1].delta=1;
-
-fm->items[2].operators[2].type=FVAT;
-fm->items[2].operators[2].threshold=31;
-fm->items[2].operators[2].delta=1;
-fm->items[2].operatorsN=3;
+fm->items[2].operatorsN=2;
 fm->items[2].span=1;
 fm->items[2].type=INT;
 
@@ -290,11 +271,7 @@ fm->items[3].operators[0].max=31;
 fm->items[3].operators[1].type=VAT;
 fm->items[3].operators[1].threshold=31;
 fm->items[3].operators[1].delta=1;
-
-fm->items[3].operators[2].type=FVAT;
-fm->items[3].operators[2].threshold=31;
-fm->items[3].operators[2].delta=1;
-fm->items[3].operatorsN=3;
+fm->items[3].operatorsN=2;
 fm->items[3].span=1;
 fm->items[3].type=INT;
 
@@ -345,54 +322,30 @@ fm->items[5].type=INT;
 fm->items[6].operators[0].type=BF;
 fm->items[6].operators[0].min=0;
 fm->items[6].operators[0].max=0;
-fm->items[6].operators[0].state=1;
+fm->items[6].operators[0].state=0;
 fm->items[6].operators[0].value=1;
 
 fm->items[6].operators[1].type=BF;
-fm->items[6].operators[1].min=0;
-fm->items[6].operators[1].max=0;
+fm->items[6].operators[1].min=1;
+fm->items[6].operators[1].max=1;
 fm->items[6].operators[1].state=0;
 fm->items[6].operators[1].value=1;
 
 fm->items[6].operators[2].type=BF;
-fm->items[6].operators[2].min=1;
-fm->items[6].operators[2].max=1;
-fm->items[6].operators[2].state=1;
+fm->items[6].operators[2].min=2;
+fm->items[6].operators[2].max=2;
+fm->items[6].operators[2].state=0;
 fm->items[6].operators[2].value=1;
 
 fm->items[6].operators[3].type=BF;
-fm->items[6].operators[3].min=1;
-fm->items[6].operators[3].max=1;
+fm->items[6].operators[3].min=3;
+fm->items[6].operators[3].max=3;
 fm->items[6].operators[3].state=0;
 fm->items[6].operators[3].value=1;
-
-fm->items[6].operators[4].type=BF;
-fm->items[6].operators[4].min=2;
-fm->items[6].operators[4].max=2;
-fm->items[6].operators[4].state=1;
-fm->items[6].operators[4].value=1;
-
-fm->items[6].operators[5].type=BF;
-fm->items[6].operators[5].min=2;
-fm->items[6].operators[5].max=2;
-fm->items[6].operators[5].state=0;
-fm->items[6].operators[5].value=1;
-
-fm->items[6].operators[6].type=BF;
-fm->items[6].operators[6].min=3;
-fm->items[6].operators[6].max=3;
-fm->items[6].operators[6].state=1;
-fm->items[6].operators[6].value=1;
-
-fm->items[6].operators[7].type=BF;
-fm->items[6].operators[7].min=3;
-fm->items[6].operators[7].max=3;
-fm->items[6].operators[7].state=0;
-fm->items[6].operators[7].value=1;
-fm->items[6].operatorsN=8;
+fm->items[6].operatorsN=4;
 fm->items[6].span=1;
 fm->items[6].type=BIN;
-fm->maxOperation = 29;
+fm->maxOperation = 20;
 return fm;
 }
 
@@ -427,20 +380,20 @@ atexit(_FAQAS_delete_Send_FM);
 FaultModel *fm = _FAQAS_create_FM(SIZE_Send);
 _FAQAS_Send_FM_ptr = fm;
 fm->ID = 1;
-fm->minOperation = 29;
+fm->minOperation = 20;
 
-fm->items[1].operators[7].type=INV;
-fm->items[1].operators[7].min=0;
-fm->items[1].operators[7].max=3;
+fm->items[1].operators[3].type=INV;
+fm->items[1].operators[3].min=0;
+fm->items[1].operators[3].max=3;
 
-fm->items[1].operators[8].type=VAT;
-fm->items[1].operators[8].threshold=3;
-fm->items[1].operators[8].delta=1;
+fm->items[1].operators[4].type=VAT;
+fm->items[1].operators[4].threshold=3;
+fm->items[1].operators[4].delta=1;
 
-fm->items[1].operators[9].type=FVAT;
-fm->items[1].operators[9].threshold=3;
-fm->items[1].operators[9].delta=1;
-fm->items[1].operatorsN=10;
+fm->items[1].operators[5].type=FVAT;
+fm->items[1].operators[5].threshold=3;
+fm->items[1].operators[5].delta=1;
+fm->items[1].operatorsN=6;
 fm->items[1].span=1;
 fm->items[1].type=INT;
 
@@ -451,11 +404,7 @@ fm->items[2].operators[0].max=31;
 fm->items[2].operators[1].type=VAT;
 fm->items[2].operators[1].threshold=31;
 fm->items[2].operators[1].delta=1;
-
-fm->items[2].operators[2].type=FVAT;
-fm->items[2].operators[2].threshold=31;
-fm->items[2].operators[2].delta=1;
-fm->items[2].operatorsN=3;
+fm->items[2].operatorsN=2;
 fm->items[2].span=1;
 fm->items[2].type=INT;
 
@@ -466,11 +415,7 @@ fm->items[3].operators[0].max=31;
 fm->items[3].operators[1].type=VAT;
 fm->items[3].operators[1].threshold=31;
 fm->items[3].operators[1].delta=1;
-
-fm->items[3].operators[2].type=FVAT;
-fm->items[3].operators[2].threshold=31;
-fm->items[3].operators[2].delta=1;
-fm->items[3].operatorsN=3;
+fm->items[3].operatorsN=2;
 fm->items[3].span=1;
 fm->items[3].type=INT;
 
@@ -521,54 +466,30 @@ fm->items[5].type=INT;
 fm->items[6].operators[0].type=BF;
 fm->items[6].operators[0].min=0;
 fm->items[6].operators[0].max=0;
-fm->items[6].operators[0].state=1;
+fm->items[6].operators[0].state=0;
 fm->items[6].operators[0].value=1;
 
 fm->items[6].operators[1].type=BF;
-fm->items[6].operators[1].min=0;
-fm->items[6].operators[1].max=0;
+fm->items[6].operators[1].min=1;
+fm->items[6].operators[1].max=1;
 fm->items[6].operators[1].state=0;
 fm->items[6].operators[1].value=1;
 
 fm->items[6].operators[2].type=BF;
-fm->items[6].operators[2].min=1;
-fm->items[6].operators[2].max=1;
-fm->items[6].operators[2].state=1;
+fm->items[6].operators[2].min=2;
+fm->items[6].operators[2].max=2;
+fm->items[6].operators[2].state=0;
 fm->items[6].operators[2].value=1;
 
 fm->items[6].operators[3].type=BF;
-fm->items[6].operators[3].min=1;
-fm->items[6].operators[3].max=1;
+fm->items[6].operators[3].min=3;
+fm->items[6].operators[3].max=3;
 fm->items[6].operators[3].state=0;
 fm->items[6].operators[3].value=1;
-
-fm->items[6].operators[4].type=BF;
-fm->items[6].operators[4].min=2;
-fm->items[6].operators[4].max=2;
-fm->items[6].operators[4].state=1;
-fm->items[6].operators[4].value=1;
-
-fm->items[6].operators[5].type=BF;
-fm->items[6].operators[5].min=2;
-fm->items[6].operators[5].max=2;
-fm->items[6].operators[5].state=0;
-fm->items[6].operators[5].value=1;
-
-fm->items[6].operators[6].type=BF;
-fm->items[6].operators[6].min=3;
-fm->items[6].operators[6].max=3;
-fm->items[6].operators[6].state=1;
-fm->items[6].operators[6].value=1;
-
-fm->items[6].operators[7].type=BF;
-fm->items[6].operators[7].min=3;
-fm->items[6].operators[7].max=3;
-fm->items[6].operators[7].state=0;
-fm->items[6].operators[7].value=1;
-fm->items[6].operatorsN=8;
+fm->items[6].operatorsN=4;
 fm->items[6].span=1;
 fm->items[6].type=BIN;
-fm->maxOperation = 58;
+fm->maxOperation = 43;
 return fm;
 }
 
@@ -595,120 +516,90 @@ void mutate_FM_Send( int *v){
 
 int _FAQAS_selectItem(){
 if ( MUTATION == 0 )
-    return 1;
+    return 2;
 if ( MUTATION == 1 )
-    return 1;
+    return 2;
 if ( MUTATION == 2 )
-    return 1;
+    return 3;
 if ( MUTATION == 3 )
-    return 2;
+    return 3;
 if ( MUTATION == 4 )
-    return 2;
+    return 4;
 if ( MUTATION == 5 )
-    return 2;
+    return 4;
 if ( MUTATION == 6 )
-    return 3;
+    return 4;
 if ( MUTATION == 7 )
-    return 3;
+    return 4;
 if ( MUTATION == 8 )
-    return 3;
+    return 4;
 if ( MUTATION == 9 )
     return 4;
 if ( MUTATION == 10 )
-    return 4;
+    return 5;
 if ( MUTATION == 11 )
-    return 4;
+    return 5;
 if ( MUTATION == 12 )
-    return 4;
+    return 5;
 if ( MUTATION == 13 )
-    return 4;
+    return 5;
 if ( MUTATION == 14 )
-    return 4;
+    return 5;
 if ( MUTATION == 15 )
     return 5;
 if ( MUTATION == 16 )
-    return 5;
+    return 6;
 if ( MUTATION == 17 )
-    return 5;
+    return 6;
 if ( MUTATION == 18 )
-    return 5;
+    return 6;
 if ( MUTATION == 19 )
-    return 5;
+    return 6;
 if ( MUTATION == 20 )
-    return 5;
+    return 1;
 if ( MUTATION == 21 )
-    return 6;
+    return 1;
 if ( MUTATION == 22 )
-    return 6;
+    return 1;
 if ( MUTATION == 23 )
-    return 6;
+    return 2;
 if ( MUTATION == 24 )
-    return 6;
+    return 2;
 if ( MUTATION == 25 )
-    return 6;
+    return 3;
 if ( MUTATION == 26 )
-    return 6;
+    return 3;
 if ( MUTATION == 27 )
-    return 6;
+    return 4;
 if ( MUTATION == 28 )
-    return 6;
+    return 4;
 if ( MUTATION == 29 )
-    return 1;
+    return 4;
 if ( MUTATION == 30 )
-    return 1;
+    return 4;
 if ( MUTATION == 31 )
-    return 1;
+    return 4;
 if ( MUTATION == 32 )
-    return 2;
+    return 4;
 if ( MUTATION == 33 )
-    return 2;
+    return 5;
 if ( MUTATION == 34 )
-    return 2;
+    return 5;
 if ( MUTATION == 35 )
-    return 3;
+    return 5;
 if ( MUTATION == 36 )
-    return 3;
+    return 5;
 if ( MUTATION == 37 )
-    return 3;
+    return 5;
 if ( MUTATION == 38 )
-    return 4;
+    return 5;
 if ( MUTATION == 39 )
-    return 4;
+    return 6;
 if ( MUTATION == 40 )
-    return 4;
+    return 6;
 if ( MUTATION == 41 )
-    return 4;
+    return 6;
 if ( MUTATION == 42 )
-    return 4;
-if ( MUTATION == 43 )
-    return 4;
-if ( MUTATION == 44 )
-    return 5;
-if ( MUTATION == 45 )
-    return 5;
-if ( MUTATION == 46 )
-    return 5;
-if ( MUTATION == 47 )
-    return 5;
-if ( MUTATION == 48 )
-    return 5;
-if ( MUTATION == 49 )
-    return 5;
-if ( MUTATION == 50 )
-    return 6;
-if ( MUTATION == 51 )
-    return 6;
-if ( MUTATION == 52 )
-    return 6;
-if ( MUTATION == 53 )
-    return 6;
-if ( MUTATION == 54 )
-    return 6;
-if ( MUTATION == 55 )
-    return 6;
-if ( MUTATION == 56 )
-    return 6;
-if ( MUTATION == 57 )
     return 6;
 return -999;
 }
@@ -719,35 +610,35 @@ if ( MUTATION == 0 )
 if ( MUTATION == 1 )
     return 1;
 if ( MUTATION == 2 )
-    return 2;
+    return 0;
 if ( MUTATION == 3 )
-    return 0;
+    return 1;
 if ( MUTATION == 4 )
-    return 1;
+    return 0;
 if ( MUTATION == 5 )
-    return 2;
+    return 1;
 if ( MUTATION == 6 )
-    return 0;
+    return 1;
 if ( MUTATION == 7 )
-    return 1;
-if ( MUTATION == 8 )
     return 2;
+if ( MUTATION == 8 )
+    return 3;
 if ( MUTATION == 9 )
-    return 0;
+    return 4;
 if ( MUTATION == 10 )
-    return 1;
+    return 0;
 if ( MUTATION == 11 )
     return 1;
 if ( MUTATION == 12 )
-    return 2;
-if ( MUTATION == 13 )
-    return 3;
-if ( MUTATION == 14 )
-    return 4;
-if ( MUTATION == 15 )
-    return 0;
-if ( MUTATION == 16 )
     return 1;
+if ( MUTATION == 13 )
+    return 2;
+if ( MUTATION == 14 )
+    return 3;
+if ( MUTATION == 15 )
+    return 4;
+if ( MUTATION == 16 )
+    return 0;
 if ( MUTATION == 17 )
     return 1;
 if ( MUTATION == 18 )
@@ -755,81 +646,51 @@ if ( MUTATION == 18 )
 if ( MUTATION == 19 )
     return 3;
 if ( MUTATION == 20 )
-    return 4;
-if ( MUTATION == 21 )
-    return 0;
-if ( MUTATION == 22 )
-    return 1;
-if ( MUTATION == 23 )
-    return 2;
-if ( MUTATION == 24 )
     return 3;
-if ( MUTATION == 25 )
+if ( MUTATION == 21 )
     return 4;
-if ( MUTATION == 26 )
+if ( MUTATION == 22 )
     return 5;
+if ( MUTATION == 23 )
+    return 0;
+if ( MUTATION == 24 )
+    return 1;
+if ( MUTATION == 25 )
+    return 0;
+if ( MUTATION == 26 )
+    return 1;
 if ( MUTATION == 27 )
-    return 6;
+    return 0;
 if ( MUTATION == 28 )
-    return 7;
+    return 1;
 if ( MUTATION == 29 )
-    return 7;
+    return 1;
 if ( MUTATION == 30 )
-    return 8;
+    return 2;
 if ( MUTATION == 31 )
-    return 9;
+    return 3;
 if ( MUTATION == 32 )
-    return 0;
+    return 4;
 if ( MUTATION == 33 )
-    return 1;
+    return 0;
 if ( MUTATION == 34 )
-    return 2;
+    return 1;
 if ( MUTATION == 35 )
-    return 0;
+    return 1;
 if ( MUTATION == 36 )
-    return 1;
-if ( MUTATION == 37 )
     return 2;
+if ( MUTATION == 37 )
+    return 3;
 if ( MUTATION == 38 )
-    return 0;
+    return 4;
 if ( MUTATION == 39 )
-    return 1;
+    return 0;
 if ( MUTATION == 40 )
     return 1;
 if ( MUTATION == 41 )
     return 2;
 if ( MUTATION == 42 )
     return 3;
-if ( MUTATION == 43 )
-    return 4;
-if ( MUTATION == 44 )
-    return 0;
-if ( MUTATION == 45 )
-    return 1;
-if ( MUTATION == 46 )
-    return 1;
-if ( MUTATION == 47 )
-    return 2;
-if ( MUTATION == 48 )
-    return 3;
-if ( MUTATION == 49 )
-    return 4;
-if ( MUTATION == 50 )
-    return 0;
-if ( MUTATION == 51 )
-    return 1;
-if ( MUTATION == 52 )
-    return 2;
-if ( MUTATION == 53 )
-    return 3;
-if ( MUTATION == 54 )
-    return 4;
-if ( MUTATION == 55 )
-    return 5;
-if ( MUTATION == 56 )
-    return 6;
-if ( MUTATION == 57 )
-    return 7;
 return -999;
 }
 int _FAQAS_selectOperation(){
@@ -846,7 +707,7 @@ if ( MUTATION == 4 )
 if ( MUTATION == 5 )
     return 0;
 if ( MUTATION == 6 )
-    return 0;
+    return 1;
 if ( MUTATION == 7 )
     return 0;
 if ( MUTATION == 8 )
@@ -856,9 +717,9 @@ if ( MUTATION == 9 )
 if ( MUTATION == 10 )
     return 0;
 if ( MUTATION == 11 )
-    return 1;
-if ( MUTATION == 12 )
     return 0;
+if ( MUTATION == 12 )
+    return 1;
 if ( MUTATION == 13 )
     return 0;
 if ( MUTATION == 14 )
@@ -868,7 +729,7 @@ if ( MUTATION == 15 )
 if ( MUTATION == 16 )
     return 0;
 if ( MUTATION == 17 )
-    return 1;
+    return 0;
 if ( MUTATION == 18 )
     return 0;
 if ( MUTATION == 19 )
@@ -892,7 +753,7 @@ if ( MUTATION == 27 )
 if ( MUTATION == 28 )
     return 0;
 if ( MUTATION == 29 )
-    return 0;
+    return 1;
 if ( MUTATION == 30 )
     return 0;
 if ( MUTATION == 31 )
@@ -904,7 +765,7 @@ if ( MUTATION == 33 )
 if ( MUTATION == 34 )
     return 0;
 if ( MUTATION == 35 )
-    return 0;
+    return 1;
 if ( MUTATION == 36 )
     return 0;
 if ( MUTATION == 37 )
@@ -914,40 +775,10 @@ if ( MUTATION == 38 )
 if ( MUTATION == 39 )
     return 0;
 if ( MUTATION == 40 )
-    return 1;
+    return 0;
 if ( MUTATION == 41 )
     return 0;
 if ( MUTATION == 42 )
-    return 0;
-if ( MUTATION == 43 )
-    return 0;
-if ( MUTATION == 44 )
-    return 0;
-if ( MUTATION == 45 )
-    return 0;
-if ( MUTATION == 46 )
-    return 1;
-if ( MUTATION == 47 )
-    return 0;
-if ( MUTATION == 48 )
-    return 0;
-if ( MUTATION == 49 )
-    return 0;
-if ( MUTATION == 50 )
-    return 0;
-if ( MUTATION == 51 )
-    return 0;
-if ( MUTATION == 52 )
-    return 0;
-if ( MUTATION == 53 )
-    return 0;
-if ( MUTATION == 54 )
-    return 0;
-if ( MUTATION == 55 )
-    return 0;
-if ( MUTATION == 56 )
-    return 0;
-if ( MUTATION == 57 )
     return 0;
 return -999;
 }
