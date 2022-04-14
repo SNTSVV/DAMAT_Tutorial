@@ -184,7 +184,7 @@ echo "$deco"
 ### Step 5: Execute the test suite
 
 As with Step 4, Step 5 will be performed automatically by the pipeline, but the user must take a few preparatory steps.
-First, the user must provide another simple _csv_ file containing the name of the test case and a normal execution time (useful to set a timeout in case a mutant should cause an infinite loop);
+First, the user must provide the _csv_ file containing the name of the test case and a normal execution time (useful to set a timeout in case a mutant should cause an infinite loop);
 You can find the one used in this example here:
 ```
 damat-pipeline/tests.csv
@@ -220,6 +220,7 @@ In this case, this is the code that has been added:
 
 ###############################################################################
 ```
+The _$tst_ variable is read from the first column of the csv file. When new test cases are added they must be included in that file to be executed during the procedure.
 
 ### Step 6: Generate the results
 
