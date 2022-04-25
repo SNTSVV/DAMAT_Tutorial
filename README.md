@@ -230,10 +230,7 @@ cd damat-pipeline
 ./DAMAt_mutants_launcher.sh
 
 ```
-When the execution is complete you will see this message:
-
-
-TODO: add the final output
+When the execution is complete you will see a message with the evaluation provided by _DAMAt_.
 
 
 ## Improving on the existing test suite
