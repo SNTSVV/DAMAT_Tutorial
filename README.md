@@ -13,7 +13,7 @@ We decided to use _libCSP_, a C library implementing the Cubesat Space Protocol 
 Additional information on _libCSP_ can be found at this link https://github.com/libcsp/libcsp.
 
 To apply the _DAMAt_ procedure we need a Software Under Test and the relative test suite to evaluate.
-_LibCSP_ does not come with a test suite, but it includes some examples; starting from one of these examples, we devised an intentionally flawed integration test suite.
+_LibCSP_ does not come with a test suite, but it includes some examples; starting from one of these examples, we devised a small, intentionally flawed example of integration test suite.
 The test suite contains a single test case that emulates a server/client configuration over loop-back and verifies that a minimum number of packets is transmitted by the client and correctly received by the server in a given time.
 
 ## Installation procedure
@@ -32,7 +32,10 @@ This version of _libCSP_ has been slightly modified with the insertion of DAMAt'
 To compile it,  you will need to go to the _libcsp_ folder and run the following command.
 
 ```shell
-./waf distclean configure build --mutation-opt -1 --singleton TRUE --with-os=posix --enable-rdp --enable-promisc --enable-hmac --enable-dedup --enable-can-socketcan --with-driver-usart=linux --enable-if-zmqhub --enable-examples
+./waf distclean configure build --mutation-opt -1 --singleton TRUE \
+--with-os=posix --enable-rdp --enable-promisc --enable-hmac --enable-dedup \
+--enable-can-socketcan --with-driver-usart=linux --enable-if-zmqhub \
+--enable-examples
 ```
 The flag _--mutation-opt -1_ will set the mutation probes to an inactive state.
 
@@ -129,7 +132,9 @@ csp_packet_t * csp_read(csp_conn_t * conn, uint32_t timeout) {
 	}
 
 #if (CSP_USE_RDP)
-	// RDP: timeout can either be 0 (for no hang poll/check) or minimum the "connection timeout"
+	/* RDP: timeout can either be 0 (for no hang poll/check)
+		or minimum the "connection timeout" */
+
 	if (timeout && (conn->idin.flags & CSP_FRDP) && (timeout < conn->rdp.conn_timeout)) {
 		timeout = conn->rdp.conn_timeout;
 	}
@@ -177,7 +182,9 @@ echo "$deco"
 echo "compiling test"
 echo "$deco"
 
-./waf distclean configure build --mutation-opt $mutant_id $EXTRA_FLAGS_SINGL --with-os=posix --enable-rdp --enable-promisc --enable-hmac --enable-dedup --enable-can-socketcan --with-driver-usart=linux --enable-if-zmqhub
+./waf distclean configure build --mutation-opt $mutant_id $EXTRA_FLAGS_SINGL \
+--with-os=posix --enable-rdp --enable-promisc --enable-hmac --enable-dedup \
+--enable-can-socketcan --with-driver-usart=linux --enable-if-zmqhub
 
 ```
 ### Step 5: Execute the test suite
@@ -217,7 +224,6 @@ In this case, this is the code that has been added:
 
   popd
 
-###############################################################################
 ```
 The _$tst_ variable is read from the first column of the csv file. When new test cases are added they must be included in that file to be executed during the procedure.
 
