@@ -54,7 +54,7 @@ The test should pass.
 
 ### Installing DAMAt
 
-*DAMAt* is not included in this repository. You can clone the FAQAS toolset from this repo <www.examplerepo.it>.
+*DAMAt* is not included in this repository. You can clone its source code from this repo <https://github.com/SNTSVV/DAMAT>.
 *DAMAt* is contained in the *damat-pipeline* folder. Is in that folder that every step of the pipeline will take place. From now on, when we write commands, we will refer to the folder *damat-pipeline* as *$DAMAT_PIPELINE* so that you can export an environment variable with the correct path and follow along by copying and pasting the commands.
 You should copy the scripts contained in *damat-config* to the *$DAMAT_PIPELINE* folder using the following commands:
 
