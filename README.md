@@ -7,11 +7,11 @@
 ## Introduction
 
 This is an example of how to apply the *DAMAt* tool and procedure to improve an existing test suite.
-We recommend to execute this procedure on Ubuntu 20.04.4 LTS, but it should work in any Linux environment.
+We recommend executing this procedure on Ubuntu 20.04.4 LTS, but it should work in any Linux environment.
 To apply the *DAMAt* procedure we need a Software Under Test and the relative test suite to evaluate.
 We decided to use *libCSP*, a C library implementing the Cubesat Space Protocol (CSP), a small protocol stack written to facilitate communication between the components of a CubeSat.
 Additional information on *libCSP* can be found at this link <https://github.com/libcsp/libcsp>.
-*LibCSP* does not come with a test suite, but it includes some examples; starting from one of these examples, we devised a small, intentionally flawed example of integration test suite.
+*LibCSP* does not come with a test suite, but it includes some examples; starting from one of these examples, we devised a small, intentionally flawed example of an integration test suite.
 The test suite contains a single test case that emulates a server/client configuration over loop-back and verifies that a minimum number of packets is transmitted by the client and correctly received by the server in a given time.
 
 ## Installation procedure
@@ -42,7 +42,7 @@ To compile it,  you will need to go to the *libcsp* folder and run the following
 
 The flag *--mutation-opt -1* will set the mutation probes to an inactive state.
 
-To execute the original test case go to the *test\_suite* folder and run the following commands:
+To execute the original test case, go to the *test\_suite* folder and run the following commands:
 
 ```shell
 make clean
@@ -85,7 +85,7 @@ test_01,10000
 
 The first column will contain the names of the test cases and the second the normal maximum execution time.
 The variable *tests_list* contained in *DAMAt_configure.sh* should be modified to point to *test.csv*.
-The following variables, also defined in *DAMAt_configure.sh* should be contain these values:
+The following variables, also defined in *DAMAt_configure.sh* should contain these values:
 
 ```shell
 # the datatype of the elements of the target buffer
@@ -120,8 +120,8 @@ libcsp/src/csp_io.c
 
 This file contains the definitions of the two functions that we will target with the probe insertion strategy:
 
-* _csp\_send_
-* _csp\_read_
+* *csp_send*
+* *csp_read*
 
 these functions take as input the data structure *csp_conn_t*, which we are going to mutate.
 By looking at the content of the file you can see how the probes were embedded in the code. This is an example:
@@ -238,7 +238,7 @@ You can find the one used in this example here:
 damat-config/tests.csv
 ```
 
-Then, the commands to run the test cases must be included in the proper space of the script *$DAMAT_PIPELINE/DAMAt_run_tests.sh*. In this case they have been already added so you just need to assign the absolute path to the root of this tutorial's repo to the variable *REPO_ROOT*, like you did for the previos script.
+Then, the commands to run the test cases must be included in the proper space of the script *$DAMAT_PIPELINE/DAMAt_run_tests.sh*. In this case, they have been already added so you just need to assign the absolute path to the root of this tutorial's repo to the variable *REPO_ROOT*, as you did for the previous script.
 In this case, this is the code that has been added:
 
 ```shell
@@ -303,7 +303,7 @@ results/final_mutants_table.csv
 ```
 
 contains information on the status of every single mutant. This file will allow us to see what fault models, data items, and input partitions, in particular, are not well tested due to the test suite's shortcomings.
-For example the *DataItem* column contains information on which data item in the buffer is targeted by the mutant. In particular:
+For example, the *DataItem* column contains information on which data item in the buffer is targeted by the mutant. In particular:
 
 * 1 = conn-><idin/idout>.pri
 * 2 = conn-><idin/idout>.src
@@ -321,17 +321,17 @@ summary_of_the_results.xlsx
 
 ### Improving the Mutation Operation Coverage
 
-We can improve the *Mutation Operation Coverage* by adding new test cases that exercise partitions not covered by the test suite such as the ones targeted by mutants that were _NOT\_APPLIED_.
+We can improve the *Mutation Operation Coverage* by adding new test cases that exercise partitions not covered by the test suite such as the ones targeted by mutants that were *NOT_APPLIED*.
 
-By looking at the mutants that were _NOT\_APPLIED_ we can identify input partitions not covered by the test suite:
+By looking at the mutants that were *NOT_APPLIED* we can identify input partitions not covered by the test suite:
 
 * there is no test case that covers a value of *conn->idin.pri* and *conn->idout.pri* > 3;
 
 ### Improving the Mutation Score
 
-We can improve the *Mutation Score* by adding new test cases that contain oracles on the values modified by *LIVE* mutants. In this case, this being an integration test suite, our primary focus is to check whether the different components (server and client) interact correctly and if the connection data contained in the structure _csp\_conn\_t_ is correctly handled and preserved through these interactions.
+We can improve the *Mutation Score* by adding new test cases that contain oracles on the values modified by *LIVE* mutants. In this case, this being an integration test suite, our primary focus is to check whether the different components (server and client) interact correctly and if the connection data contained in the structure *csp_conn_t* is correctly handled and preserved through these interactions.
 
-By looking at the mutants that were *APPLIED* but not *KILLED* by the test suite, we notice that they belong to some specific members of the _csp\_conn\_t_ structure:
+By looking at the mutants that were *APPLIED* but not *KILLED* by the test suite, we notice that they belong to some specific members of the *csp_conn_t* structure:
 
 * *conn->idin.pri* and *conn->idout.pri*, which define the priority of the connection;
 * *conn->idin.src*, *conn->idout.src*, *conn->idin.dst*, and *conn->idout.src*, which represent the source and destination;
@@ -355,7 +355,7 @@ The test case is implemented in the file
 test_suite/test_02/test_02.c
 ```
 
-and can be executed by compiling *libCSP*, moving to the _test\_suite_ folder, and executing the following command:
+and can be executed by compiling *libCSP*, moving to the *test_suite* folder, and executing the following command:
 
 ```shell
 make test_02
@@ -369,7 +369,7 @@ test_01,10000
 test_02,10000
 ```
 
-After adding _test\_02_ to the test suite and re-executing *DAMAt*, the metrics should become the following:
+After adding *test_02* to the test suite and re-executing *DAMAt*, the metrics should become the following:
 
 * *Fault Model Coverage* 100%
 * *Mutation Operation Coverage* 100%
@@ -387,7 +387,7 @@ The test case is implemented in the file
 test_suite/test_03/test_03.c
 ```
 
-and can be executed by compiling *libCSP*, moving to the _test\_suite_ folder, and executing the following command:
+and can be executed by compiling *libCSP*, moving to the *test_suite* folder, and executing the following command:
 
 ```shell
 make test_03
@@ -402,7 +402,7 @@ test_02,10000
 test_03,10000
 ```
 
-After adding _test\_03_ to the test suite and re-executing *DAMAt*, the metrics will become the following:
+After adding *test_03* to the test suite and re-executing *DAMAt*, the metrics will become the following:
 
 * *Fault Model Coverage* 100%
 * *Mutation Operation Coverage* 100%
@@ -420,7 +420,7 @@ The test case is implemented in the file
 test_suite/test_04/test_04.c
 ```
 
-and can be executed by compiling *libCSP*, moving to the _test\_suite_ folder, and executing the following command:
+and can be executed by compiling *libCSP*, moving to the *test_suite* folder, and executing the following command:
 
 ```shell
 make test_04
@@ -436,7 +436,7 @@ test_03,10000
 test_04,10000
 ```
 
-After adding _test\_04_ to the test suite and re-executing *DAMAt*, the metrics will become the following:
+After adding *test_04* to the test suite and re-executing *DAMAt*, the metrics will become the following:
 
 * *Fault Model Coverage* 100%
 * *Mutation Operation Coverage* 100%
@@ -452,7 +452,7 @@ The test case is implemented in the file
 test_suite/test_04/test_04.c
 ```
 
-and can be executed by compiling *libCSP*, moving to the _test\_suite_ folder, and executing the following command:
+and can be executed by compiling *libCSP*, moving to the *test_suite* folder, and executing the following command:
 
 ```shell
 make test_04
@@ -468,7 +468,7 @@ test_03,10000
 test_04,10000
 ```
 
-After adding _test\_05_ to the test suite and re-executing *DAMAt*, the metrics will become the following:
+After adding *test_05* to the test suite and re-executing *DAMAt*, the metrics will become the following:
 
 * *Fault Model Coverage* 100%
 * *Mutation Operation Coverage* 100%
@@ -476,5 +476,5 @@ After adding _test\_05_ to the test suite and re-executing *DAMAt*, the metrics 
 
 ## Conclusion
 
-This example is intended to show that, with the help of DAMAt, a user can obtain valuable indication on how to improve a test suite.
+This example is intended to show that, with the help of DAMAt, a user can obtain valuable indications on how to improve a test suite.
 The new test suite for  *libCSP*, while intentionally still very limited and simple, should be more capable of identifying problems in the SUT than it was at the start.
