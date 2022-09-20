@@ -48,8 +48,12 @@ while IFS="," read -r p || [ -n "$p" ];do
 
 ###############################################################################
 # here the user shall call the execution of the current test case,
+# REPO_ROOT must contain the path to the root of this tutorial's repo
 
-  pushd /home/vagrant/libcsp_workspace/test_suite
+  REPO_ROOT=
+  TEST_SUITE="$REPO_ROOT/test_suite"
+
+  pushd $TEST_SUITE
 
   echo "$deco" 2>&1 | tee -a $execution_log
   echo "$(tput setaf 1) RUNNING THE TEST NOW! $(tput sgr0)" 2>&1 | tee -a $execution_log

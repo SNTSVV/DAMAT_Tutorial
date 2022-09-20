@@ -35,7 +35,9 @@ fi
 
 # here the user must invoke the compilation of the SUT
 
-compilation_folder="/home/vagrant/libcsp_workspace/libcsp"
+# REPO_ROOT must contain the path to the root of this tutorial's repo
+REPO_ROOT=
+LIBCSP_ROOT="$REPO_ROOT/libcsp"
 
 pushd $compilation_folder
 
