@@ -63,7 +63,6 @@ cp damat-config/DAMAt_run_tests.sh $DAMAT_PIPELINE/DAMAt_run_tests.sh
 cp damat-config/DAMAt_compile.sh $DAMAT_PIPELINE/DAMAt_compile.sh
 ```
 
-
 ## Executing DAMAt
 
 ### Step 1: Fault Model Specification
@@ -299,7 +298,7 @@ At a first glance we can see that not all the input partitions have been covered
 The file
 
 ```
-results/final_mutants_table.csv
+results/detailed_results.csv
 ```
 
 contains information on the status of every single mutant. This file will allow us to see what fault models, data items, and input partitions, in particular, are not well tested due to the test suite's shortcomings.
