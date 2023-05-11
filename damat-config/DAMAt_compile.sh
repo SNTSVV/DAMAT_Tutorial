@@ -39,7 +39,7 @@ fi
 REPO_ROOT=
 LIBCSP_ROOT="$REPO_ROOT/libcsp"
 
-pushd $compilation_folder
+pushd $LIBCSP_ROOT
 
 echo "$deco"
 echo "compiling test"
