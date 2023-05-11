@@ -57,10 +57,10 @@ The test should pass.
 *DAMAt* is not included in this repository. You can clone its source code from this repo <https://github.com/SNTSVV/DAMAT>.
 *DAMAt* is contained in the *damat-pipeline* folder. Is in that folder that every step of the pipeline will take place. 
 
-From now on, when we write commands, we will refer to the folder *damat-pipeline* in the DAMAT repository as *$DAMAT_PIPELINE*.
+From now on, when we write commands, we will refer to the folder *damat-pipeline* in the DAMAt repository as *$DAMAT_PIPELINE*.
 If you export an environment variable called *$DAMAT_PIPELINE* containing the path to *damat-pipeline* you should be able to follow the commands written in the following.
 
-You can do it using this command, replacing of course *path/to/the/damat/repo* with the path where you cloned the DAMAT repo.
+You can do it using this command, replacing of course *path/to/the/damat/repo* with the path where you cloned the DAMAt repo.
 
 ```shell
 export DAMAT_PIPELINE="/path/to/the/damat/repo/DAMAT/damat-pipeline"
