@@ -219,7 +219,7 @@ By taking a look at it, you will see how it has been done for this particular ca
 REPO_ROOT=
 LIBCSP_ROOT="$REPO_ROOT/libcsp"
 
-pushd $compilation_folder
+pushd $LIBCSP_ROOT
 
 echo "$deco"
 echo "compiling test"
