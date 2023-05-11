@@ -86,16 +86,22 @@ damat-config/fault_model_libcsp.csv
 ```
 
 This *csv* file contains two *Fault Models* implementing a total of 39 *Mutation Operators*, which will generate the mutants.
-You must then modify the file *$DAMAT_PIPELINE/DAMAt_configure.sh* to contain the absolute path to the fault model file in the variable *fault_model*.
-Another *csv* file, *test.csv* should contain the following:
+Another *csv* file in the same folder, *test.csv* should contain the following:
 
 ```
 test_01,10000
 ```
 
 The first column will contain the names of the test cases and the second the normal maximum execution time.
-The variable *tests_list* contained in *DAMAt_configure.sh* should be modified to point to *test.csv*.
-The following variables, also defined in *DAMAt_configure.sh* should contain these values:
+
+You should copy these two csv files in the *$DAMAT_PIPELINE* folder, in place of the examples.
+
+```shell
+cp damat-config/fault_model_libcsp.csv $DAMAT_PIPELINE/fault_model.csv
+cp damat-config/tests.csv $DAMAT_PIPELINE/tests.csv
+```
+
+The following variable declarations, defined in *$DAMAT_PIPELINE/DAMAt_configure.sh* should be modified to contain the following values:
 
 ```shell
 # the datatype of the elements of the target buffer
