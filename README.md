@@ -212,7 +212,7 @@ The file also contains the following inclusion:
 To enable this step, which will be automatically performed by the *DAMAt* pipeline, the user will need to modify this script:
 
 ```
-$DAMAT_PIPELINE/DAMAt_run_tests.sh
+$DAMAT_PIPELINE/DAMAt_compile.sh
 ```
 
 to include the commands to compile the SUT.
